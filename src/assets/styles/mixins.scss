@@ -1,0 +1,73 @@
+@use './variables.scss' as *;
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == xs {
+    @media (min-width: $breakpoint-xs) {
+      @content;
+    }
+  } @else if $breakpoint == sm {
+    @media (min-width: $breakpoint-sm) {
+      @content;
+    }
+  } @else if $breakpoint == md {
+    @media (min-width: $breakpoint-md) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (min-width: $breakpoint-lg) {
+      @content;
+    }
+  } @else if $breakpoint == xl {
+    @media (min-width: $breakpoint-xl) {
+      @content;
+    }
+  } @else if $breakpoint == 2xl {
+    @media (min-width: $breakpoint-2xl) {
+      @content;
+    }
+  }
+}
+
+@mixin card {
+  background: $color-bg-card;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-lg;
+  backdrop-filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    background: $color-bg-card-hover;
+    border-color: $color-border-hover;
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 12px 40px rgba(255, 255, 255, 0.08);
+  }
+}
+
+@mixin gradient-text {
+  background: linear-gradient(90deg, $color-text-secondary, $color-text-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@mixin glow-effect($color: $color-glow) {
+  box-shadow: 0 0 20px $color, 0 0 40px rgba($color, 0.3);
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin glass-morphism {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}

@@ -1,0 +1,290 @@
+@use './index' as *;
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  background-color: $color-bg-primary;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.015'/%3E%3C/svg%3E");
+  line-height: 1.3333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+    z-index: 0;
+    animation: gridDrift 120s linear infinite;
+  }
+
+  &::after {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image:
+      radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.015) 0%, transparent 30%),
+      radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.012) 0%, transparent 35%),
+      radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.01) 0%, transparent 25%);
+    pointer-events: none;
+    z-index: 0;
+    animation: atmosphereShift 80s ease-in-out infinite;
+    mix-blend-mode: screen;
+  }
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  --mouse-x: 0px;
+  --mouse-y: 0px;
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background-image:
+      radial-gradient(circle at calc(25% + var(--mouse-x) * 0.15) calc(25% + var(--mouse-y) * 0.15), rgba(255, 255, 255, 0.025) 0%, transparent 20%),
+      radial-gradient(circle at calc(75% - var(--mouse-x) * 0.1) calc(75% - var(--mouse-y) * 0.1), rgba(255, 255, 255, 0.02) 0%, transparent 20%),
+      radial-gradient(circle at calc(50% + var(--mouse-x) * 0.08) calc(50% + var(--mouse-y) * 0.08), rgba(255, 255, 255, 0.015) 0%, transparent 25%);
+    pointer-events: none;
+    z-index: 0;
+    animation: floatingOrbs 40s ease-in-out infinite;
+    transition: background-position 0.3s ease-out;
+  }
+
+  &::after {
+    content: '';
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image:
+      radial-gradient(circle at calc(20% - var(--mouse-x) * 0.05) calc(80% + var(--mouse-y) * 0.05), rgba(255, 255, 255, 0.012) 0%, transparent 15%),
+      radial-gradient(circle at calc(80% + var(--mouse-x) * 0.05) calc(20% - var(--mouse-y) * 0.05), rgba(255, 255, 255, 0.012) 0%, transparent 15%),
+      radial-gradient(circle at calc(60% + var(--mouse-x) * 0.03) calc(60% + var(--mouse-y) * 0.03), rgba(255, 255, 255, 0.01) 0%, transparent 20%);
+    pointer-events: none;
+    z-index: 0;
+    animation: pulseGlow 30s ease-in-out infinite;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: $spacing-md;
+}
+
+h1 {
+  font-size: $font-size-4xl;
+}
+
+h2 {
+  font-size: $font-size-3xl;
+}
+
+h3 {
+  font-size: $font-size-2xl;
+}
+
+h4 {
+  font-size: $font-size-xl;
+}
+
+p {
+  margin-bottom: $spacing-md;
+}
+
+a {
+  color: $color-primary;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $color-accent;
+  }
+}
+
+button {
+  font-family: $font-family-primary;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: $color-text-primary;
+  color: $color-bg-primary;
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    background: $color-secondary;
+    transform: translateY(-1px);
+  }
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid $color-border;
+  color: $color-text-primary;
+
+  &:hover:not(:disabled) {
+    border-color: $color-border-hover;
+    background: $color-bg-card;
+  }
+}
+
+.border-gradient {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 -1px;
+    padding: 1px;
+    background: $color-gradient-border;
+    border-radius: inherit;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.glass-card {
+  background: $color-gradient-card;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+input, textarea {
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  background: $color-bg-secondary;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-md;
+  padding: $spacing-sm $spacing-md;
+  outline: none;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: $color-primary;
+    @include glow-effect;
+  }
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: $container-max-width;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+
+  @include respond-to(md) {
+    padding: 0 $spacing-xl;
+  }
+
+  @include respond-to(lg) {
+    padding: 0 $spacing-2xl;
+  }
+}
+
+.gradient-text {
+  @include gradient-text;
+}
+
+.mono {
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid transparent;
+  border-top-color: $color-primary;
+  border-right-color: $color-accent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: $border-radius-md;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $color-bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-accent;
+  border-radius: $border-radius-sm;
+
+  &:hover {
+    background: $color-secondary;
+  }
+}
