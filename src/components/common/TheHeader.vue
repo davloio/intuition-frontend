@@ -39,7 +39,7 @@ onUnmounted(() => {
       <div class="header-wrapper">
         <div class="header-content">
           <RouterLink to="/" class="logo">
-            <div class="logo-icon"></div>
+            <img src="/logo.svg" alt="Logo" class="logo-icon" />
             <span class="logo-text">
               INTUITION <span class="logo-text-tech">EXPLORER</span>
             </span>
@@ -211,8 +211,6 @@ onUnmounted(() => {
 .logo-icon {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
-  border: 2px solid $color-text-primary;
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
