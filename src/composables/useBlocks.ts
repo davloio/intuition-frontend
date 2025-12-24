@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { useQuery, useSubscription } from 'villus'
-import { GET_BLOCKS, GET_BLOCK, SUBSCRIBE_BLOCKS } from '@/services/graphqlQueries'
-import type { Block, BlockConnection } from '@/types/block'
+import { GET_BLOCKS, GET_BLOCK, GET_BLOCK_DETAIL, SUBSCRIBE_BLOCKS } from '@/services/graphqlQueries'
+import type { Block, BlockDetail, BlockConnection } from '@/types/block'
 
 interface BlocksQueryResult {
   blocks: BlockConnection
@@ -25,7 +25,7 @@ export function useBlocks(limit: number = 20, offset: number = 0) {
     const variables: { limit?: number; offset?: number } = {}
     if (newLimit !== undefined) variables.limit = newLimit
     if (newOffset !== undefined) variables.offset = newOffset
-    await execute(variables)
+    await execute({ variables })
   }
 
   return {
@@ -82,5 +82,34 @@ export function useFetchBlock() {
 
   return {
     fetchBlockByIdentifier
+  }
+}
+
+interface BlockDetailQueryResult {
+  blockDetail: BlockDetail | null
+}
+
+export function useFetchBlockDetail(blockNumber: number) {
+  const { data, isFetching, error, execute } = useQuery<BlockDetailQueryResult>({
+    query: GET_BLOCK_DETAIL,
+    variables: { number: blockNumber }
+  })
+
+  const blockDetail = computed(() => data.value?.blockDetail)
+  const loading = computed(() => isFetching.value)
+  const errorMessage = computed(() => {
+    if (!error.value) return null
+    return error.value.message || 'Failed to fetch block details'
+  })
+
+  const refetch = async () => {
+    await execute()
+  }
+
+  return {
+    blockDetail,
+    loading,
+    error: errorMessage,
+    refetch
   }
 }

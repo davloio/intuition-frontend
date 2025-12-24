@@ -3,7 +3,7 @@ import { computed, watch, ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useStats, useStatsSubscription } from '@/composables/useStats'
 import { formatNumber } from '@/utils/formatters'
 
-const { stats: statsData, loading, error } = useStats()
+const { stats: statsData, loading } = useStats()
 const { stats: liveStats } = useStatsSubscription()
 const currentStats = ref(statsData.value)
 const newBlockAnimation = ref(false)
@@ -38,19 +38,16 @@ const stats = computed(() => {
   if (!currentStats.value) {
     return [
       { label: 'CURRENT BLOCK', value: loading.value ? 'Loading...' : 'N/A', code: 'BLK-CUR' },
-      { label: 'TOTAL TRANSACTIONS', value: loading.value ? 'Loading...' : 'N/A', code: 'TXN-TOT' }
+      { label: 'TOTAL TRANSACTIONS', value: loading.value ? 'Loading...' : 'N/A', code: 'TXN-TOT' },
+      { label: 'TOTAL ADDRESSES', value: loading.value ? 'Loading...' : 'N/A', code: 'ADDR-TOT' }
     ]
   }
 
   return [
     { label: 'CURRENT BLOCK', value: currentStats.value.currentBlockHeight, code: 'BLK-CUR' },
-    { label: 'TOTAL TRANSACTIONS', value: currentStats.value.totalTransactions, code: 'TXN-TOT' }
+    { label: 'TOTAL TRANSACTIONS', value: currentStats.value.totalTransactions, code: 'TXN-TOT' },
+    { label: 'TOTAL ADDRESSES', value: currentStats.value.totalAddresses, code: 'ADDR-TOT' }
   ]
-})
-
-const transactionsPerBlock = computed(() => {
-  if (!currentStats.value) return 0
-  return Math.round(currentStats.value.totalTransactions / currentStats.value.currentBlockHeight)
 })
 
 const animationInterval = ref<number | null>(null)
@@ -78,10 +75,12 @@ const updatePulsePositions = () => {
       }
     })
 
-    document.documentElement.style.setProperty('--pulse-start-x', `${nodeData[0].x}%`)
-    document.documentElement.style.setProperty('--pulse-mid-x', `${nodeData[1].x}%`)
-    document.documentElement.style.setProperty('--pulse-end-x', `${nodeData[2].x}%`)
-    document.documentElement.style.setProperty('--pulse-y', `${nodeData[1].y}%`)
+    if (nodeData.length === 3) {
+      document.documentElement.style.setProperty('--pulse-start-x', `${nodeData[0]!.x}%`)
+      document.documentElement.style.setProperty('--pulse-mid-x', `${nodeData[1]!.x}%`)
+      document.documentElement.style.setProperty('--pulse-end-x', `${nodeData[2]!.x}%`)
+      document.documentElement.style.setProperty('--pulse-y', `${nodeData[1]!.y}%`)
+    }
   })
 }
 

@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { useQuery, useSubscription } from 'villus'
-import { GET_TRANSACTIONS, GET_TRANSACTION, SUBSCRIBE_TRANSACTIONS } from '@/services/graphqlQueries'
-import type { Transaction, TransactionConnection } from '@/types/transaction'
+import { GET_TRANSACTIONS, GET_TRANSACTION, GET_TRANSACTION_DETAIL, SUBSCRIBE_TRANSACTIONS } from '@/services/graphqlQueries'
+import type { Transaction, TransactionDetail, TransactionConnection } from '@/types/transaction'
 
 interface TransactionsQueryResult {
   transactions: TransactionConnection
@@ -10,15 +10,20 @@ interface TransactionsQueryResult {
 export function useTransactions(
   limit: number = 20,
   offset: number = 0,
-  blockNumber?: number
+  blockNumber?: number,
+  address?: string
 ) {
-  const variables: { limit: number; offset: number; blockNumber?: number } = {
+  const variables: { limit: number; offset: number; blockNumber?: number; address?: string } = {
     limit,
     offset
   }
   
   if (blockNumber !== undefined) {
     variables.blockNumber = blockNumber
+  }
+  
+  if (address !== undefined) {
+    variables.address = address
   }
 
   const { data, isFetching, error, execute } = useQuery<TransactionsQueryResult>({
@@ -37,17 +42,20 @@ export function useTransactions(
   const refetch = async (
     newLimit?: number,
     newOffset?: number,
-    newBlockNumber?: number
+    newBlockNumber?: number,
+    newAddress?: string
   ) => {
     const newVariables: {
       limit?: number
       offset?: number
       blockNumber?: number
+      address?: string
     } = {}
     if (newLimit !== undefined) newVariables.limit = newLimit
     if (newOffset !== undefined) newVariables.offset = newOffset
     if (newBlockNumber !== undefined) newVariables.blockNumber = newBlockNumber
-    await execute(newVariables)
+    if (newAddress !== undefined) newVariables.address = newAddress
+    await execute({ variables: newVariables })
   }
 
   return {
@@ -102,5 +110,34 @@ export function useFetchTransaction() {
 
   return {
     fetchTransactionByHash
+  }
+}
+
+interface TransactionDetailQueryResult {
+  transactionDetail: TransactionDetail | null
+}
+
+export function useFetchTransactionDetail(hash: string) {
+  const { data, isFetching, error, execute } = useQuery<TransactionDetailQueryResult>({
+    query: GET_TRANSACTION_DETAIL,
+    variables: { hash }
+  })
+
+  const transactionDetail = computed(() => data.value?.transactionDetail)
+  const loading = computed(() => isFetching.value)
+  const errorMessage = computed(() => {
+    if (!error.value) return null
+    return error.value.message || 'Failed to fetch transaction details'
+  })
+
+  const refetch = async () => {
+    await execute()
+  }
+
+  return {
+    transactionDetail,
+    loading,
+    error: errorMessage,
+    refetch
   }
 }

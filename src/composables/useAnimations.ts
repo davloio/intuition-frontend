@@ -58,7 +58,7 @@ export function useAnimations() {
     let currentIndex = 0
     const timeline = gsap.timeline({ repeat: -1 })
 
-    words.forEach((word, index) => {
+    words.forEach(() => {
       timeline
         .to(element, {
           opacity: 0,
@@ -66,7 +66,7 @@ export function useAnimations() {
           duration: 0.5,
           ease: 'power2.in',
           onComplete: () => {
-            element.textContent = words[(currentIndex + 1) % words.length]
+            element.textContent = words[(currentIndex + 1) % words.length] || ''
             currentIndex = (currentIndex + 1) % words.length
           }
         })

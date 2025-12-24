@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import gsap from 'gsap'
 
 const router = useRouter()
 const transitioning = ref(false)
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((_to, _from, next) => {
   transitioning.value = true
   next()
 })
@@ -31,8 +31,8 @@ router.afterEach(() => {
 <script lang="ts">
 export default {
   methods: {
-    onEnter(el: HTMLElement, done: () => void) {
-      gsap.from(el, {
+    onEnter(el: Element, done: () => void) {
+      gsap.from(el as HTMLElement, {
         opacity: 0,
         y: 20,
         duration: 0.4,
@@ -40,8 +40,8 @@ export default {
         onComplete: done
       })
     },
-    onLeave(el: HTMLElement, done: () => void) {
-      gsap.to(el, {
+    onLeave(el: Element, done: () => void) {
+      gsap.to(el as HTMLElement, {
         opacity: 0,
         y: -20,
         duration: 0.3,

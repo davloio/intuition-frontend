@@ -28,6 +28,16 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/TransactionDetailPage.vue')
   },
   {
+    path: '/addresses',
+    name: 'addresses',
+    component: () => import('@/views/AddressesPage.vue')
+  },
+  {
+    path: '/addresses/:address',
+    name: 'address-detail',
+    component: () => import('@/views/AddressDetailPage.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@/views/NotFoundPage.vue')
@@ -37,7 +47,7 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(_to, _from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     } else {

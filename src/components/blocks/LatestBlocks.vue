@@ -2,7 +2,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useBlocks, useBlocksSubscription } from '@/composables/useBlocks'
-import { formatTimestamp, formatNumber } from '@/utils/formatters'
+import { formatNumber } from '@/utils/formatters'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import { format } from 'date-fns'
 

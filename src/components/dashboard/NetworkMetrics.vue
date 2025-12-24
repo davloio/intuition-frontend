@@ -1,21 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useBlocks } from '@/composables/useBlocks'
-import { formatNumber, formatPercentage } from '@/utils/formatters'
 
-const { blocks, fetchBlocks } = useBlocks()
-const avgGasUsed = ref(0)
+
+const { blocks, refetch } = useBlocks()
 const avgTransactionsPerBlock = ref(0)
 const blockTime = ref(12)
 
 const calculateMetrics = async () => {
-  await fetchBlocks(20, 0)
+  await refetch(20, 0)
 
   if (blocks.value.length > 0) {
-    const totalGas = blocks.value.reduce((sum, block) => sum + block.gas_used, 0)
-    const totalTxs = blocks.value.reduce((sum, block) => sum + block.transaction_count, 0)
+    const totalTxs = blocks.value.reduce((sum, block) => sum + block.transactionCount, 0)
 
-    avgGasUsed.value = Math.round(totalGas / blocks.value.length)
     avgTransactionsPerBlock.value = Math.round((totalTxs / blocks.value.length) * 10) / 10
   }
 }
@@ -32,18 +29,6 @@ onMounted(() => {
       <h3>NETWORK METRICS</h3>
     </div>
     <div class="metrics-grid">
-      <div class="metric-item">
-        <div class="metric-header">
-          <span class="metric-code">GAS-AVG</span>
-          <span class="metric-label">AVERAGE GAS USED</span>
-        </div>
-        <div class="metric-value">{{ formatNumber(avgGasUsed) }}</div>
-        <div class="metric-bar">
-          <div class="metric-fill" :style="{ width: '75%' }"></div>
-        </div>
-        <span class="metric-percentage">75%</span>
-      </div>
-
       <div class="metric-item">
         <div class="metric-header">
           <span class="metric-code">TXN-AVG</span>
@@ -108,7 +93,7 @@ h3 {
   background: rgba(255, 255, 255, 0.1);
 
   @include respond-to(md) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

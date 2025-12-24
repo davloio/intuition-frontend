@@ -3,6 +3,7 @@ export const GET_STATS = `
     stats {
       currentBlockHeight
       totalTransactions
+      totalAddresses
     }
   }
 `
@@ -22,13 +23,17 @@ export const GET_BLOCKS = `
 `
 
 export const GET_TRANSACTIONS = `
-  query GetTransactions($limit: Int, $offset: Int, $blockNumber: Int) {
-    transactions(limit: $limit, offset: $offset, blockNumber: $blockNumber) {
+  query GetTransactions($limit: Int, $offset: Int, $blockNumber: Int, $address: String) {
+    transactions(limit: $limit, offset: $offset, blockNumber: $blockNumber, address: $address) {
       items {
         hash
         blockNumber
         position
         createdAt
+        fromAddress
+        toAddress
+        value
+        status
       }
       totalCount
     }
@@ -40,6 +45,7 @@ export const SUBSCRIBE_STATS = `
     stats {
       currentBlockHeight
       totalTransactions
+      totalAddresses
     }
   }
 `
@@ -84,6 +90,94 @@ export const GET_TRANSACTION = `
       blockNumber
       position
       createdAt
+    }
+  }
+`
+
+export const GET_BLOCK_DETAIL = `
+  query GetBlockDetail($number: Int!) {
+    blockDetail(number: $number) {
+      number
+      timestamp
+      transactionCount
+      createdAt
+      parentHash
+      gasUsed
+      gasLimit
+      miner
+      difficulty
+      totalDifficulty
+      size
+      extraData
+      logsBloom
+      mixHash
+      nonce
+      baseFeePerGas
+      blockProcessedAt
+    }
+  }
+`
+
+export const GET_TRANSACTION_DETAIL = `
+  query GetTransactionDetail($hash: String!) {
+    transactionDetail(hash: $hash) {
+      hash
+      blockNumber
+      position
+      createdAt
+      fromAddress
+      toAddress
+      value
+      gasUsed
+      gasPrice
+      maxFeePerGas
+      maxPriorityFeePerGas
+      effectiveGasPrice
+      cumulativeGasUsed
+      transactionFee
+      nonce
+      inputData
+      status
+      contractAddress
+      logsCount
+      methodId
+      transactionType
+      isBridgeTransaction
+      bridgeDirection
+      txProcessedAt
+    }
+  }
+`
+
+export const GET_ADDRESSES = `
+  query GetAddresses($limit: Int, $offset: Int) {
+    addresses(limit: $limit, offset: $offset) {
+      items {
+        address
+        transactionCount
+        balance
+        isContract
+        lastSeenAt
+      }
+      totalCount
+    }
+  }
+`
+
+export const GET_ADDRESS_DETAIL = `
+  query GetAddressDetail($address: String!) {
+    addressDetail(address: $address) {
+      address
+      firstSeenBlock
+      lastSeenBlock
+      createdAt
+      updatedAt
+      transactionCountOut
+      transactionCountIn
+      totalSent
+      totalReceived
+      balance
+      isContract
     }
   }
 `

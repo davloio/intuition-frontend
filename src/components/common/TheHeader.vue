@@ -55,6 +55,9 @@ onUnmounted(() => {
             <RouterLink to="/transactions" class="nav-link" data-text="Transactions">
               <span class="nav-link-inner border-gradient glass-card">Transactions</span>
             </RouterLink>
+            <RouterLink to="/addresses" class="nav-link" data-text="Addresses">
+              <span class="nav-link-inner border-gradient glass-card">Addresses</span>
+            </RouterLink>
           </nav>
 
           <button class="search-button" @click="openSearchModal" aria-label="Search">
@@ -118,6 +121,11 @@ onUnmounted(() => {
             <RouterLink to="/transactions" class="nav-item" @click="toggleMobileMenu">
               <span class="item-num">03</span>
               <span class="item-label">TRANSACTIONS</span>
+              <span class="item-bar"></span>
+            </RouterLink>
+            <RouterLink to="/addresses" class="nav-item" @click="toggleMobileMenu">
+              <span class="item-num">04</span>
+              <span class="item-label">ADDRESSES</span>
               <span class="item-bar"></span>
             </RouterLink>
           </nav>
