@@ -27,7 +27,7 @@ const handleKeyup = (event: KeyboardEvent) => {
       <input
         v-model="query"
         type="text"
-        placeholder="Search by block number, block hash, or transaction hash..."
+        placeholder="Search by block number, transaction hash, block hash, or address..."
         class="search-input"
         @keyup="handleKeyup"
         :disabled="searching"

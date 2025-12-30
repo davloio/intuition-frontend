@@ -1,5 +1,5 @@
-import { computed } from 'vue'
-import { useQuery, useSubscription } from 'villus'
+import { computed, watch, unref, type Ref, type ComputedRef } from 'vue'
+import { useQuery, useSubscription, useClient } from 'villus'
 import { GET_BLOCKS, GET_BLOCK, GET_BLOCK_DETAIL, SUBSCRIBE_BLOCKS } from '@/services/graphqlQueries'
 import type { Block, BlockDetail, BlockConnection } from '@/types/block'
 
@@ -21,11 +21,8 @@ export function useBlocks(limit: number = 20, offset: number = 0) {
     return error.value.message || 'Failed to fetch blocks'
   })
 
-  const refetch = async (newLimit?: number, newOffset?: number) => {
-    const variables: { limit?: number; offset?: number } = {}
-    if (newLimit !== undefined) variables.limit = newLimit
-    if (newOffset !== undefined) variables.offset = newOffset
-    await execute({ variables })
+  const refetch = async (newLimit: number = limit, newOffset: number = offset) => {
+    await execute({ variables: { limit: newLimit, offset: newOffset } })
   }
 
   return {
@@ -55,24 +52,23 @@ interface BlockQueryResult {
 }
 
 export function useFetchBlock() {
+  const client = useClient()
+
   const fetchBlockByIdentifier = async (identifier: string | number): Promise<Block | null> => {
     try {
       const identifierStr = typeof identifier === 'number' ? identifier.toString() : identifier.replace(/,/g, '')
-      
-      const { execute } = useQuery<BlockQueryResult>({
+
+      const { data, error } = await client.executeQuery<BlockQueryResult>({
         query: GET_BLOCK,
         variables: { identifier: identifierStr },
-        cachePolicy: 'network-only',
-        skip: true
+        cachePolicy: 'network-only'
       })
-      
-      const { data, error } = await execute()
-      
+
       if (error) {
         console.error('Error fetching block:', error)
         return null
       }
-      
+
       return data?.block || null
     } catch (err) {
       console.error('Error fetching block:', err)
@@ -89,10 +85,14 @@ interface BlockDetailQueryResult {
   blockDetail: BlockDetail | null
 }
 
-export function useFetchBlockDetail(blockNumber: number) {
+export function useFetchBlockDetail(blockNumber: Ref<number> | ComputedRef<number>) {
   const { data, isFetching, error, execute } = useQuery<BlockDetailQueryResult>({
     query: GET_BLOCK_DETAIL,
-    variables: { number: blockNumber }
+    variables: { number: unref(blockNumber) }
+  })
+
+  watch(blockNumber, (newBlockNumber) => {
+    execute({ variables: { number: newBlockNumber } })
   })
 
   const blockDetail = computed(() => data.value?.blockDetail)

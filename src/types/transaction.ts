@@ -3,10 +3,6 @@ export interface Transaction {
   blockNumber: number
   position: number
   createdAt: string
-  fromAddress?: string
-  toAddress?: string
-  value?: string
-  status?: number
 }
 
 export interface TransactionDetail {

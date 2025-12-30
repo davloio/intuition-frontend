@@ -30,10 +30,6 @@ export const GET_TRANSACTIONS = `
         blockNumber
         position
         createdAt
-        fromAddress
-        toAddress
-        value
-        status
       }
       totalCount
     }

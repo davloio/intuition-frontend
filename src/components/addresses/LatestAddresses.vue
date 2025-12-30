@@ -38,7 +38,7 @@ const displayedAddresses = computed(() => addresses.value)
         <div class="address-info">
           <div class="info-item">
             <span class="info-label">Balance</span>
-            <span class="info-value mono">{{ formatWei(address.balance) }} ETH</span>
+            <span class="info-value mono">{{ formatWei(address.balance) }} TRUST</span>
           </div>
           <div class="info-item">
             <span class="info-label">Txns</span>
@@ -95,11 +95,22 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: $spacing-md;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.06);
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: $color-hover-overlay;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  &:hover::before {
+    opacity: 1;
   }
 }
 

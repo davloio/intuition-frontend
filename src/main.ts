@@ -6,8 +6,12 @@ import '@/assets/styles/main.scss'
 import { createClient, defaultPlugins, handleSubscriptions } from 'villus'
 import { createClient as createWSClient } from 'graphql-ws'
 
-const GRAPHQL_ENDPOINT = import.meta.env.VITE_GRAPHQL_ENDPOINT
-const GRAPHQL_WS_ENDPOINT = import.meta.env.VITE_GRAPHQL_WS_ENDPOINT
+const GRAPHQL_ENDPOINT = import.meta.env.VITE_GRAPHQL_ENDPOINT || 'https://api.intuition.davlo.io/graphql'
+const GRAPHQL_WS_ENDPOINT = import.meta.env.VITE_GRAPHQL_WS_ENDPOINT || 'wss://api.intuition.davlo.io/graphql'
+
+if (!GRAPHQL_ENDPOINT) {
+  console.error('VITE_GRAPHQL_ENDPOINT is not defined!')
+}
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -43,9 +47,11 @@ if (GRAPHQL_WS_ENDPOINT) {
   plugins.unshift(subscriptionsHandler)
 }
 
-app.use(createClient({
+export const villusClient = createClient({
   url: GRAPHQL_ENDPOINT,
   use: plugins
-}))
+})
+
+app.use(villusClient)
 
 app.mount('#app')

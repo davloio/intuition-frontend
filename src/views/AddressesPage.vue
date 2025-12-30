@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useAddresses } from '@/composables/useAddresses'
-import { formatWei, truncateAddress } from '@/utils/formatters'
+import { formatWei } from '@/utils/formatters'
 import { format } from 'date-fns'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import ErrorMessage from '@/components/common/ErrorMessage.vue'
@@ -11,21 +11,25 @@ const page = ref(1)
 const pageSize = 20
 
 const offset = computed(() => (page.value - 1) * pageSize)
-const { addresses, totalCount, loading, error } = useAddresses(pageSize, offset.value)
+const { addresses, totalCount, loading, error, refetch } = useAddresses(pageSize, offset.value)
 
 const totalPages = computed(() => Math.ceil(totalCount.value / pageSize))
+
+watch(page, async (newPage) => {
+  const newOffset = (newPage - 1) * pageSize
+  await refetch(pageSize, newOffset)
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+})
 
 const goToNextPage = () => {
   if (page.value < totalPages.value) {
     page.value++
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
 
 const goToPrevPage = () => {
   if (page.value > 1) {
     page.value--
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
 
@@ -34,7 +38,7 @@ const maxBalance = computed(() => {
   return Math.max(...balances, 1)
 })
 
-const getBalanceWidth = (balance: string) => {
+const getBalanceWidth = (balance?: string) => {
   const val = parseFloat(balance || '0')
   return (val / maxBalance.value) * 100
 }
@@ -78,9 +82,7 @@ const getBalanceWidth = (balance: string) => {
               <div class="header-main">
                 <span class="addr-label">ADDR</span>
                 <div class="addr-hash-display">
-                  <span class="hash-segment mono">{{ address.address.substring(0, 8) }}</span>
-                  <span class="hash-ellipsis">•••</span>
-                  <span class="hash-segment mono">{{ address.address.substring(address.address.length - 6) }}</span>
+                  <span class="hash-segment mono">{{ address.address }}</span>
                 </div>
               </div>
               <div class="header-badge">
@@ -94,7 +96,7 @@ const getBalanceWidth = (balance: string) => {
                 <div class="row-label-group">
                   <span class="row-label">BALANCE</span>
                   <span class="row-value mono">{{ formatWei(address.balance) }}</span>
-                  <span class="row-unit">ETH</span>
+                  <span class="row-unit">TRUST</span>
                 </div>
                 <div class="balance-visual">
                   <div class="balance-track">
@@ -113,7 +115,7 @@ const getBalanceWidth = (balance: string) => {
                 </div>
                 <div class="metric-box">
                   <span class="metric-label">LAST SEEN</span>
-                  <span class="metric-value mono">{{ address.lastSeenAt ? format(new Date(address.lastSeenAt), 'HH:mm') : 'N/A' }}</span>
+                  <span class="metric-value mono">{{ address.lastSeenAt ? format(new Date(address.lastSeenAt), 'MMM dd, HH:mm') : 'N/A' }}</span>
                 </div>
               </div>
             </div>
@@ -287,6 +289,10 @@ const getBalanceWidth = (balance: string) => {
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
   opacity: 0;
+
+  [data-theme="light"] & {
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.04) 0%, transparent 70%);
+  }
 }
 
 .panel-header {
@@ -318,16 +324,12 @@ const getBalanceWidth = (balance: string) => {
 }
 
 .hash-segment {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
   color: $color-text-primary;
-  letter-spacing: -0.01em;
-}
-
-.hash-ellipsis {
-  font-size: 14px;
-  color: $color-text-muted;
-  font-weight: 700;
+  letter-spacing: -0.02em;
+  word-break: break-all;
+  line-height: 1.3;
 }
 
 .header-badge {
@@ -347,12 +349,22 @@ const getBalanceWidth = (balance: string) => {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: $color-text-primary;
+
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
   }
 
   &.eoa {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
     color: $color-text-muted;
+
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: rgba(0, 0, 0, 0.05);
+    }
   }
 }
 
@@ -405,6 +417,10 @@ const getBalanceWidth = (balance: string) => {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 3px;
   overflow: hidden;
+
+  [data-theme="light"] & {
+    background: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .balance-fill {
@@ -413,6 +429,11 @@ const getBalanceWidth = (balance: string) => {
   border-radius: 3px;
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+
+  [data-theme="light"] & {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 100%);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  }
 }
 
 .data-metrics {
@@ -421,6 +442,10 @@ const getBalanceWidth = (balance: string) => {
   gap: $spacing-lg;
   padding-top: $spacing-md;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+  [data-theme="light"] & {
+    border-top-color: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .metric-box {
@@ -439,9 +464,10 @@ const getBalanceWidth = (balance: string) => {
 }
 
 .metric-value {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
   color: $color-text-secondary;
+  white-space: nowrap;
 }
 
 .panel-footer {
@@ -455,6 +481,10 @@ const getBalanceWidth = (balance: string) => {
   width: 0;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+  [data-theme="light"] & {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 100%);
+  }
 }
 
 .pagination {
@@ -477,9 +507,19 @@ const getBalanceWidth = (balance: string) => {
   font-size: $font-size-sm;
   font-weight: 500;
 
+  [data-theme="light"] & {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.05);
+  }
+
   &:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
+
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.08);
+    }
   }
 
   &:disabled {

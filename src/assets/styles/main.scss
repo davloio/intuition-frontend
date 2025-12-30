@@ -34,8 +34,8 @@ body {
     width: 100%;
     height: 100%;
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      linear-gradient(var(--radial-gradient-1) 1px, transparent 1px),
+      linear-gradient(90deg, var(--radial-gradient-1) 1px, transparent 1px);
     background-size: 80px 80px;
     pointer-events: none;
     z-index: 0;
@@ -50,9 +50,9 @@ body {
     width: 200%;
     height: 200%;
     background-image:
-      radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.015) 0%, transparent 30%),
-      radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.012) 0%, transparent 35%),
-      radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.01) 0%, transparent 25%);
+      radial-gradient(circle at 30% 40%, var(--radial-gradient-1) 0%, transparent 30%),
+      radial-gradient(circle at 70% 60%, var(--radial-gradient-2) 0%, transparent 35%),
+      radial-gradient(circle at 50% 20%, var(--radial-gradient-2) 0%, transparent 25%);
     pointer-events: none;
     z-index: 0;
     animation: atmosphereShift 80s ease-in-out infinite;
@@ -77,9 +77,9 @@ body {
     width: 120%;
     height: 120%;
     background-image:
-      radial-gradient(circle at calc(25% + var(--mouse-x) * 0.15) calc(25% + var(--mouse-y) * 0.15), rgba(255, 255, 255, 0.025) 0%, transparent 20%),
-      radial-gradient(circle at calc(75% - var(--mouse-x) * 0.1) calc(75% - var(--mouse-y) * 0.1), rgba(255, 255, 255, 0.02) 0%, transparent 20%),
-      radial-gradient(circle at calc(50% + var(--mouse-x) * 0.08) calc(50% + var(--mouse-y) * 0.08), rgba(255, 255, 255, 0.015) 0%, transparent 25%);
+      radial-gradient(circle at calc(25% + var(--mouse-x) * 0.15) calc(25% + var(--mouse-y) * 0.15), var(--radial-gradient-1) 0%, transparent 20%),
+      radial-gradient(circle at calc(75% - var(--mouse-x) * 0.1) calc(75% - var(--mouse-y) * 0.1), var(--radial-gradient-2) 0%, transparent 20%),
+      radial-gradient(circle at calc(50% + var(--mouse-x) * 0.08) calc(50% + var(--mouse-y) * 0.08), var(--radial-gradient-2) 0%, transparent 25%);
     pointer-events: none;
     z-index: 0;
     animation: floatingOrbs 40s ease-in-out infinite;
@@ -94,9 +94,9 @@ body {
     top: 0;
     left: 0;
     background-image:
-      radial-gradient(circle at calc(20% - var(--mouse-x) * 0.05) calc(80% + var(--mouse-y) * 0.05), rgba(255, 255, 255, 0.012) 0%, transparent 15%),
-      radial-gradient(circle at calc(80% + var(--mouse-x) * 0.05) calc(20% - var(--mouse-y) * 0.05), rgba(255, 255, 255, 0.012) 0%, transparent 15%),
-      radial-gradient(circle at calc(60% + var(--mouse-x) * 0.03) calc(60% + var(--mouse-y) * 0.03), rgba(255, 255, 255, 0.01) 0%, transparent 20%);
+      radial-gradient(circle at calc(20% - var(--mouse-x) * 0.05) calc(80% + var(--mouse-y) * 0.05), var(--radial-gradient-2) 0%, transparent 15%),
+      radial-gradient(circle at calc(80% + var(--mouse-x) * 0.05) calc(20% - var(--mouse-y) * 0.05), var(--radial-gradient-2) 0%, transparent 15%),
+      radial-gradient(circle at calc(60% + var(--mouse-x) * 0.03) calc(60% + var(--mouse-y) * 0.03), var(--radial-gradient-2) 0%, transparent 20%);
     pointer-events: none;
     z-index: 0;
     animation: pulseGlow 30s ease-in-out infinite;
@@ -185,15 +185,21 @@ button {
   &::before {
     content: '';
     position: absolute;
-    inset: 0 0 -1px;
+    inset: -1px;
     padding: 1px;
     background: $color-gradient-border;
     border-radius: inherit;
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    opacity: 0.5;
+    opacity: 0.6;
     pointer-events: none;
+  }
+
+  [data-theme="light"] & {
+    &::before {
+      opacity: 0.8;
+    }
   }
 }
 
@@ -202,6 +208,24 @@ button {
   backdrop-filter: blur(10px);
   position: relative;
   overflow: hidden;
+
+  [data-theme="light"] & {
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.08),
+      0 4px 16px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  [data-theme="dark"] & {
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.4),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      inset 0 1px 1px rgba(255, 255, 255, 0.15),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
 }
 
 input, textarea {
@@ -269,6 +293,16 @@ input, textarea {
   background-size: 2000px 100%;
   animation: shimmer 2s infinite;
   border-radius: $border-radius-md;
+
+  [data-theme="light"] & {
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.03) 25%,
+      rgba(0, 0, 0, 0.08) 50%,
+      rgba(0, 0, 0, 0.03) 75%
+    );
+    background-size: 2000px 100%;
+  }
 }
 
 ::-webkit-scrollbar {

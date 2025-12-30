@@ -41,7 +41,7 @@ const lastSeen = computed(() => {
     <div class="address-details">
       <div class="detail-item">
         <span class="detail-label">Balance</span>
-        <span class="detail-value mono">{{ formattedBalance }} ETH</span>
+        <span class="detail-value mono">{{ formattedBalance }} TRUST</span>
       </div>
 
       <div class="detail-item">
@@ -66,11 +66,22 @@ const lastSeen = computed(() => {
   border-radius: 12px;
   text-decoration: none;
   color: inherit;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 
-  &:hover {
-    transform: translateY(-4px) scale(1.01);
-    box-shadow: 0 12px 40px rgba(255, 255, 255, 0.08);
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: $color-hover-overlay;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  &:hover::before {
+    opacity: 1;
   }
 }
 

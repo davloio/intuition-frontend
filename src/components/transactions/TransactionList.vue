@@ -39,20 +39,8 @@ const nextPage = () => {
   }
 }
 
-const truncateHash = (hash: string, start = 16, end = 12) => {
-  return `${hash.substring(0, start)}...${hash.substring(hash.length - end)}`
-}
-
-const truncateAddress = (address?: string) => {
-  if (!address) return 'N/A'
-  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
-}
-
-const formatValue = (value?: string) => {
-  if (!value || value === '0') return '0'
-  const ethValue = parseFloat(value) / 1e18
-  if (ethValue < 0.0001) return '< 0.0001'
-  return ethValue.toFixed(4)
+const formatTimestamp = (timestamp: string) => {
+  return format(new Date(timestamp), 'MMM dd, yyyy HH:mm:ss')
 }
 </script>
 
@@ -73,53 +61,29 @@ const formatValue = (value?: string) => {
         <div class="tile-glow"></div>
 
         <div class="tile-header">
-          <div class="header-left">
-            <span class="txn-label">TXN</span>
-            <div class="hash-display">
-              <span class="hash-part mono">{{ tx.hash.substring(0, 10) }}</span>
-              <span class="hash-dots">...</span>
-              <span class="hash-part mono">{{ tx.hash.substring(tx.hash.length - 8) }}</span>
-            </div>
-          </div>
-          <div class="header-right">
-            <span v-if="tx.status === 1" class="status-badge success">SUCCESS</span>
-            <span v-else-if="tx.status === 0" class="status-badge failed">FAILED</span>
+          <span class="txn-label">TXN</span>
+          <div class="hash-display">
+            <span class="hash-part mono">{{ tx.hash.substring(0, 16) }}</span>
+            <span class="hash-dots">...</span>
+            <span class="hash-part mono">{{ tx.hash.substring(tx.hash.length - 12) }}</span>
           </div>
         </div>
 
         <div class="tile-body">
-          <div class="address-flow">
-            <div class="flow-item">
-              <span class="flow-label">FROM</span>
-              <span class="flow-address mono">{{ truncateAddress(tx.fromAddress) }}</span>
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">BLOCK</span>
+              <span class="meta-value mono">{{ tx.blockNumber }}</span>
             </div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-item">
-              <span class="flow-label">TO</span>
-              <span class="flow-address mono">{{ truncateAddress(tx.toAddress) }}</span>
-            </div>
-          </div>
-
-          <div class="value-display">
-            <span class="value-label">VALUE</span>
-            <div class="value-amount">
-              <span class="amount-value mono">{{ formatValue(tx.value) }}</span>
-              <span class="amount-unit">ETH</span>
+            <div class="meta-item">
+              <span class="meta-label">POSITION</span>
+              <span class="meta-value mono">{{ tx.position }}</span>
             </div>
           </div>
 
-          <div class="meta-row">
-            <div class="meta-compact">
-              <span class="meta-label-inline">BLK</span>
-              <span class="meta-value-inline mono">{{ tx.blockNumber }}</span>
-            </div>
-            <div class="meta-compact">
-              <span class="meta-label-inline">POS</span>
-              <span class="meta-value-inline mono">{{ tx.position }}</span>
-            </div>
-            <div class="meta-compact">
-              <span class="timestamp mono">{{ format(new Date(tx.createdAt), 'HH:mm:ss') }}</span>
-            </div>
+          <div class="timestamp-row">
+            <span class="timestamp-label">TIMESTAMP</span>
+            <span class="timestamp-value mono">{{ formatTimestamp(tx.createdAt) }}</span>
           </div>
         </div>
 
@@ -209,20 +173,16 @@ const formatValue = (value?: string) => {
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
   opacity: 0;
+
+  [data-theme="light"] & {
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.04) 0%, transparent 70%);
+  }
 }
 
 .tile-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: $spacing-md;
-}
-
-.header-left {
-  display: flex;
   flex-direction: column;
   gap: $spacing-sm;
-  flex: 1;
 }
 
 .txn-label {
@@ -253,82 +213,25 @@ const formatValue = (value?: string) => {
   font-weight: 600;
 }
 
-.header-right {
-  display: flex;
-  align-items: center;
-}
-
-.status-badge {
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-family: $font-family-mono;
-  font-size: 8px;
-  letter-spacing: 0.1em;
-  font-weight: 600;
-
-  &.success {
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    color: rgba(16, 185, 129, 1);
-  }
-
-  &.failed {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: rgba(239, 68, 68, 1);
-  }
-}
-
 .tile-body {
   display: flex;
   flex-direction: column;
-  gap: $spacing-md;
+  gap: $spacing-lg;
 }
 
-.address-flow {
+.meta-grid {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: $spacing-md;
-  align-items: center;
-  padding: $spacing-md;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.flow-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.flow-label {
-  font-family: $font-family-mono;
-  font-size: 8px;
-  color: $color-text-muted;
-  letter-spacing: 0.1em;
-  font-weight: 600;
-}
-
-.flow-address {
-  font-size: 13px;
-  color: $color-text-secondary;
-  font-weight: 500;
-}
-
-.flow-arrow {
-  font-size: 18px;
-  color: $color-text-muted;
-  opacity: 0.4;
-}
-
-.value-display {
+.meta-item {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.value-label {
+.meta-label {
   font-family: $font-family-mono;
   font-size: 9px;
   color: $color-text-muted;
@@ -336,55 +239,35 @@ const formatValue = (value?: string) => {
   font-weight: 600;
 }
 
-.value-amount {
-  display: flex;
-  align-items: baseline;
-  gap: $spacing-sm;
-}
-
-.amount-value {
-  font-size: 24px;
-  font-weight: 700;
-  color: $color-text-primary;
-}
-
-.amount-unit {
-  font-size: 14px;
+.meta-value {
+  font-size: 15px;
   color: $color-text-secondary;
   font-weight: 500;
 }
 
-.meta-row {
+.timestamp-row {
   display: flex;
-  gap: $spacing-xl;
-  padding-top: $spacing-md;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: $spacing-sm;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-  flex-wrap: wrap;
+
+  [data-theme="light"] & {
+    border-top-color: rgba(0, 0, 0, 0.04);
+  }
 }
 
-.meta-compact {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
-
-.meta-label-inline {
+.timestamp-label {
   font-family: $font-family-mono;
   font-size: 9px;
   color: $color-text-muted;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   font-weight: 600;
 }
 
-.meta-value-inline {
+.timestamp-value {
   font-size: 13px;
   color: $color-text-secondary;
-  font-weight: 500;
-}
-
-.timestamp {
-  font-size: 11px;
-  color: $color-text-muted;
   font-weight: 500;
 }
 
@@ -397,6 +280,10 @@ const formatValue = (value?: string) => {
   width: 0;
   background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+  [data-theme="light"] & {
+    background: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
+  }
 }
 
 .empty-state {
@@ -421,14 +308,4 @@ const formatValue = (value?: string) => {
   font-weight: 500;
 }
 
-@media (max-width: 640px) {
-  .address-flow {
-    grid-template-columns: 1fr;
-    gap: $spacing-sm;
-  }
-
-  .flow-arrow {
-    display: none;
-  }
-}
 </style>

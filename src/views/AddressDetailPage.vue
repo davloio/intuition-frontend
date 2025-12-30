@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useFetchAddressDetail } from '@/composables/useAddresses'
 import { useTransactions } from '@/composables/useTransactions'
@@ -15,18 +15,24 @@ const page = ref(1)
 const pageSize = 20
 const offset = computed(() => (page.value - 1) * pageSize)
 
-const { addressDetail, loading: addressLoading, error: addressError } = useFetchAddressDetail(addressHash.value)
-const { transactions, totalCount, loading: txLoading, error: txError } = useTransactions(
+const { addressDetail, loading: addressLoading, error: addressError } = useFetchAddressDetail(addressHash)
+const { transactions, totalCount, loading: txLoading, error: txError, refetch } = useTransactions(
   pageSize,
   offset.value,
   undefined,
-  addressHash.value
+  addressHash
 )
 
 const loading = computed(() => addressLoading.value || txLoading.value)
 const error = computed(() => addressError.value || txError.value)
 
 const totalPages = computed(() => Math.ceil(totalCount.value / pageSize))
+
+watch(page, async (newPage) => {
+  const newOffset = (newPage - 1) * pageSize
+  await refetch(pageSize, newOffset, undefined, addressHash.value)
+  window.scrollTo({ top: 400, behavior: 'smooth' })
+})
 
 const formattedBalance = computed(() => {
   if (!addressDetail.value?.balance) return { wei: '0', eth: '0' }
@@ -55,14 +61,12 @@ const formattedTotalReceived = computed(() => {
 const goToNextPage = () => {
   if (page.value < totalPages.value) {
     page.value++
-    window.scrollTo({ top: 400, behavior: 'smooth' })
   }
 }
 
 const goToPrevPage = () => {
   if (page.value > 1) {
     page.value--
-    window.scrollTo({ top: 400, behavior: 'smooth' })
   }
 }
 </script>
@@ -126,8 +130,8 @@ const goToPrevPage = () => {
           </div>
 
           <div class="detail-row">
-            <span class="detail-label">Balance (ETH)</span>
-            <span class="detail-value mono">{{ formattedBalance.eth }} ETH</span>
+            <span class="detail-label">Balance (TRUST)</span>
+            <span class="detail-value mono">{{ formattedBalance.eth }} TRUST</span>
           </div>
 
           <div class="detail-row">
@@ -152,8 +156,8 @@ const goToPrevPage = () => {
           </div>
 
           <div class="detail-row">
-            <span class="detail-label">Total Sent (ETH)</span>
-            <span class="detail-value mono">{{ formattedTotalSent.eth }} ETH</span>
+            <span class="detail-label">Total Sent (TRUST)</span>
+            <span class="detail-value mono">{{ formattedTotalSent.eth }} TRUST</span>
           </div>
 
           <div class="detail-row">
@@ -162,8 +166,8 @@ const goToPrevPage = () => {
           </div>
 
           <div class="detail-row">
-            <span class="detail-label">Total Received (ETH)</span>
-            <span class="detail-value mono">{{ formattedTotalReceived.eth }} ETH</span>
+            <span class="detail-label">Total Received (TRUST)</span>
+            <span class="detail-value mono">{{ formattedTotalReceived.eth }} TRUST</span>
           </div>
 
           <div class="detail-row">
@@ -325,6 +329,10 @@ const goToPrevPage = () => {
   align-items: center;
   padding-bottom: $spacing-xs;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  [data-theme="light"] & {
+    border-bottom-color: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .detail-code {
@@ -345,6 +353,11 @@ const goToPrevPage = () => {
   color: $color-text-secondary;
   letter-spacing: 0.05em;
   font-weight: 600;
+
+  [data-theme="light"] & {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.06);
+  }
 }
 
 .detail-row {
@@ -353,6 +366,10 @@ const goToPrevPage = () => {
   gap: 4px;
   padding: 6px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+
+  [data-theme="light"] & {
+    border-bottom-color: rgba(0, 0, 0, 0.025);
+  }
 
   &:last-child {
     border-bottom: none;
@@ -469,6 +486,10 @@ const goToPrevPage = () => {
   gap: $spacing-md;
   padding-top: $spacing-sm;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+  [data-theme="light"] & {
+    border-top-color: rgba(0, 0, 0, 0.06);
+  }
 }
 
 .tx-detail {
@@ -510,9 +531,19 @@ const goToPrevPage = () => {
   font-size: $font-size-sm;
   font-weight: 500;
 
+  [data-theme="light"] & {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.05);
+  }
+
   &:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
+
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.08);
+    }
   }
 
   &:disabled {

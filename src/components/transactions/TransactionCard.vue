@@ -54,11 +54,22 @@ const formatCreatedAt = (createdAt: string) => {
   color: $color-text-primary;
   cursor: pointer;
   border-radius: $border-radius-lg;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 
-  &:hover {
-    transform: translateY(-2px);
-    background: $color-bg-card-hover;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: $border-radius-lg;
+    background: $color-hover-overlay;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  &:hover::before {
+    opacity: 1;
   }
 }
 

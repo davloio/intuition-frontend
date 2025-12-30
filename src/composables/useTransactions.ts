@@ -1,5 +1,5 @@
-import { computed } from 'vue'
-import { useQuery, useSubscription } from 'villus'
+import { computed, watch, unref, type Ref, type ComputedRef } from 'vue'
+import { useQuery, useSubscription, useClient } from 'villus'
 import { GET_TRANSACTIONS, GET_TRANSACTION, GET_TRANSACTION_DETAIL, SUBSCRIBE_TRANSACTIONS } from '@/services/graphqlQueries'
 import type { Transaction, TransactionDetail, TransactionConnection } from '@/types/transaction'
 
@@ -10,26 +10,56 @@ interface TransactionsQueryResult {
 export function useTransactions(
   limit: number = 20,
   offset: number = 0,
-  blockNumber?: number,
-  address?: string
+  blockNumber?: Ref<number> | ComputedRef<number> | number,
+  address?: Ref<string> | ComputedRef<string> | string
 ) {
+  const blockNumberValue = typeof blockNumber === 'number' || blockNumber === undefined
+    ? blockNumber
+    : unref(blockNumber)
+
+  const addressValue = typeof address === 'string' || address === undefined
+    ? address
+    : unref(address)
+
   const variables: { limit: number; offset: number; blockNumber?: number; address?: string } = {
     limit,
     offset
   }
-  
-  if (blockNumber !== undefined) {
-    variables.blockNumber = blockNumber
+
+  if (blockNumberValue !== undefined) {
+    variables.blockNumber = blockNumberValue
   }
-  
-  if (address !== undefined) {
-    variables.address = address
+
+  if (addressValue !== undefined) {
+    variables.address = addressValue
   }
 
   const { data, isFetching, error, execute } = useQuery<TransactionsQueryResult>({
     query: GET_TRANSACTIONS,
     variables
   })
+
+  if (blockNumber && typeof blockNumber !== 'number') {
+    watch(blockNumber, (newBlockNumber) => {
+      const newVariables = { limit, offset, blockNumber: newBlockNumber }
+      const currentAddress = typeof address === 'string' ? address : unref(address)
+      if (currentAddress !== undefined) {
+        newVariables.address = currentAddress
+      }
+      execute({ variables: newVariables })
+    })
+  }
+
+  if (address && typeof address !== 'string') {
+    watch(address, (newAddress) => {
+      const newVariables = { limit, offset, address: newAddress }
+      const currentBlockNumber = typeof blockNumber === 'number' ? blockNumber : unref(blockNumber)
+      if (currentBlockNumber !== undefined) {
+        newVariables.blockNumber = currentBlockNumber
+      }
+      execute({ variables: newVariables })
+    })
+  }
 
   const transactions = computed(() => data.value?.transactions.items || [])
   const totalCount = computed(() => data.value?.transactions.totalCount || 0)
@@ -40,21 +70,30 @@ export function useTransactions(
   })
 
   const refetch = async (
-    newLimit?: number,
-    newOffset?: number,
+    newLimit: number = limit,
+    newOffset: number = offset,
     newBlockNumber?: number,
     newAddress?: string
   ) => {
     const newVariables: {
-      limit?: number
-      offset?: number
+      limit: number
+      offset: number
       blockNumber?: number
       address?: string
-    } = {}
-    if (newLimit !== undefined) newVariables.limit = newLimit
-    if (newOffset !== undefined) newVariables.offset = newOffset
-    if (newBlockNumber !== undefined) newVariables.blockNumber = newBlockNumber
-    if (newAddress !== undefined) newVariables.address = newAddress
+    } = {
+      limit: newLimit,
+      offset: newOffset
+    }
+    if (newBlockNumber !== undefined) {
+      newVariables.blockNumber = newBlockNumber
+    } else if (blockNumber !== undefined) {
+      newVariables.blockNumber = blockNumber
+    }
+    if (newAddress !== undefined) {
+      newVariables.address = newAddress
+    } else if (address !== undefined) {
+      newVariables.address = address
+    }
     await execute({ variables: newVariables })
   }
 
@@ -85,22 +124,21 @@ interface TransactionQueryResult {
 }
 
 export function useFetchTransaction() {
+  const client = useClient()
+
   const fetchTransactionByHash = async (hash: string): Promise<Transaction | null> => {
     try {
-      const { execute } = useQuery<TransactionQueryResult>({
+      const { data, error } = await client.executeQuery<TransactionQueryResult>({
         query: GET_TRANSACTION,
         variables: { hash },
-        cachePolicy: 'network-only',
-        skip: true
+        cachePolicy: 'network-only'
       })
-      
-      const { data, error } = await execute()
-      
+
       if (error) {
         console.error('Error fetching transaction:', error)
         return null
       }
-      
+
       return data?.transaction || null
     } catch (err) {
       console.error('Error fetching transaction:', err)
@@ -117,10 +155,14 @@ interface TransactionDetailQueryResult {
   transactionDetail: TransactionDetail | null
 }
 
-export function useFetchTransactionDetail(hash: string) {
+export function useFetchTransactionDetail(hash: Ref<string> | ComputedRef<string>) {
   const { data, isFetching, error, execute } = useQuery<TransactionDetailQueryResult>({
     query: GET_TRANSACTION_DETAIL,
-    variables: { hash }
+    variables: { hash: unref(hash) }
+  })
+
+  watch(hash, (newHash) => {
+    execute({ variables: { hash: newHash } })
   })
 
   const transactionDetail = computed(() => data.value?.transactionDetail)

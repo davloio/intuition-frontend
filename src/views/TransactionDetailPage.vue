@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useFetchTransactionDetail } from '@/composables/useTransactions'
 import { formatWei, formatDateTime, getTransactionStatus } from '@/utils/formatters'
@@ -11,33 +11,8 @@ import ErrorMessage from '@/components/common/ErrorMessage.vue'
 const route = useRoute()
 const txHash = computed(() => route.params.hash as string)
 
-const { transactionDetail, loading, error } = useFetchTransactionDetail(txHash.value)
+const { transactionDetail, loading, error } = useFetchTransactionDetail(txHash)
 
-const copiedAddress = ref<string | null>(null)
-
-const handleCopyAddress = async (eventOrAddress: Event | string, address?: string) => {
-  const addressToCopy = typeof eventOrAddress === 'string' ? eventOrAddress : address!
-  
-  if (eventOrAddress instanceof Event) {
-    eventOrAddress.preventDefault()
-    eventOrAddress.stopPropagation()
-  }
-  
-  try {
-    await navigator.clipboard.writeText(addressToCopy)
-    copiedAddress.value = addressToCopy
-    
-    setTimeout(() => {
-      copiedAddress.value = null
-    }, 2000)
-  } catch (err) {
-    console.error('Copy failed:', err)
-  }
-}
-
-const isCopied = (address: string) => {
-  return copiedAddress.value === address
-}
 
 const statusInfo = computed(() => {
   if (!transactionDetail.value) return null
@@ -88,13 +63,10 @@ const formattedFee = computed(() => {
 
           <div class="detail-row">
             <span class="detail-label">Transaction Hash</span>
-            <div class="hash-value-row">
-              <span class="detail-value mono hash-full">{{ txHash }}</span>
-              <CopyIcon 
-                :copied="isCopied(txHash)" 
-                @copy="handleCopyAddress(txHash)" 
-              />
-            </div>
+            <CopyableValue
+              :value="txHash"
+              value-class="detail-value mono hash-full"
+            />
           </div>
 
           <div class="detail-row">
@@ -120,9 +92,9 @@ const formattedFee = computed(() => {
             <span class="detail-code">TXN-ADDRESSES</span>
           </div>
 
-          <RouterLink 
+          <RouterLink
             v-if="transactionDetail.fromAddress"
-            :to="`/addresses/${transactionDetail.fromAddress}`" 
+            :to="`/addresses/${transactionDetail.fromAddress}`"
             class="detail-row address-row"
           >
             <span class="detail-label">From</span>
@@ -130,16 +102,14 @@ const formattedFee = computed(() => {
               <span class="detail-value mono address-link">
                 {{ transactionDetail.fromAddress }}
               </span>
-              <CopyIcon 
-                :copied="isCopied(transactionDetail.fromAddress)" 
-                @copy="handleCopyAddress(transactionDetail.fromAddress)" 
+              <CopyIcon :value="transactionDetail.fromAddress" 
               />
             </div>
           </RouterLink>
 
-          <RouterLink 
+          <RouterLink
             v-if="transactionDetail.toAddress"
-            :to="`/addresses/${transactionDetail.toAddress}`" 
+            :to="`/addresses/${transactionDetail.toAddress}`"
             class="detail-row address-row"
           >
             <span class="detail-label">To</span>
@@ -147,14 +117,11 @@ const formattedFee = computed(() => {
               <span class="detail-value mono address-link">
                 {{ transactionDetail.toAddress }}
               </span>
-              <CopyIcon 
-                :copied="isCopied(transactionDetail.toAddress)" 
-                @copy="handleCopyAddress(transactionDetail.toAddress)" 
-              />
+              <CopyIcon :value="transactionDetail.toAddress" />
             </div>
           </RouterLink>
 
-          <RouterLink 
+          <RouterLink
             v-if="transactionDetail.contractAddress"
             :to="`/addresses/${transactionDetail.contractAddress}`" 
             class="detail-row address-row"
@@ -164,10 +131,7 @@ const formattedFee = computed(() => {
               <span class="detail-value mono address-link">
                 {{ transactionDetail.contractAddress }}
               </span>
-              <CopyIcon 
-                :copied="isCopied(transactionDetail.contractAddress)" 
-                @copy="handleCopyAddress(transactionDetail.contractAddress)" 
-              />
+              <CopyIcon :value="transactionDetail.contractAddress" />
             </div>
           </RouterLink>
         </div>
@@ -178,8 +142,8 @@ const formattedFee = computed(() => {
           </div>
 
           <div class="detail-row">
-            <span class="detail-label">Value (ETH)</span>
-            <span class="detail-value mono">{{ formattedValue.eth }} ETH</span>
+            <span class="detail-label">Value (TRUST)</span>
+            <span class="detail-value mono">{{ formattedValue.eth }} TRUST</span>
           </div>
 
           <div class="detail-row">
@@ -188,8 +152,8 @@ const formattedFee = computed(() => {
           </div>
 
           <div class="detail-row">
-            <span class="detail-label">Transaction Fee (ETH)</span>
-            <span class="detail-value mono">{{ formattedFee.eth }} ETH</span>
+            <span class="detail-label">Transaction Fee (TRUST)</span>
+            <span class="detail-value mono">{{ formattedFee.eth }} TRUST</span>
           </div>
 
           <div class="detail-row">
@@ -364,6 +328,10 @@ const formattedFee = computed(() => {
   align-items: center;
   padding-bottom: $spacing-xs;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  [data-theme="light"] & {
+    border-bottom-color: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .detail-code {
@@ -398,6 +366,11 @@ const formattedFee = computed(() => {
     color: $color-text-muted;
     border-color: rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.05);
+
+    [data-theme="light"] & {
+      border-color: rgba(0, 0, 0, 0.06);
+      background: rgba(0, 0, 0, 0.03);
+    }
   }
 }
 
@@ -419,6 +392,10 @@ const formattedFee = computed(() => {
   padding: 6px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.02);
 
+  [data-theme="light"] & {
+    border-bottom-color: rgba(0, 0, 0, 0.025);
+  }
+
   &:last-child {
     border-bottom: none;
   }
@@ -426,11 +403,12 @@ const formattedFee = computed(() => {
   &.address-row {
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     margin: 0 (-$spacing-md);
     padding: 6px $spacing-md;
     border-radius: 6px;
+    position: relative;
 
     @include respond-to(md) {
       margin: 0 (-$spacing-lg);
@@ -442,9 +420,19 @@ const formattedFee = computed(() => {
       padding: 6px $spacing-xl;
     }
 
-    &:hover {
-      transform: translateY(-2px);
-      background: $color-bg-card-hover;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 6px;
+      background: $color-hover-overlay;
+      opacity: 0;
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+
+    &:hover::before {
+      opacity: 1;
     }
   }
 }
@@ -480,6 +468,11 @@ const formattedFee = computed(() => {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.05);
+
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: rgba(0, 0, 0, 0.05);
+    }
     font-size: 11px;
   }
 }
@@ -494,8 +487,7 @@ const formattedFee = computed(() => {
   }
 }
 
-.address-value-row,
-.hash-value-row {
+.address-value-row {
   display: flex;
   align-items: center;
   gap: $spacing-xs;

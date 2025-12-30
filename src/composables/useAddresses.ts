@@ -1,5 +1,5 @@
-import { computed } from 'vue'
-import { useQuery } from 'villus'
+import { computed, watch, unref, type Ref, type ComputedRef } from 'vue'
+import { useQuery, useClient } from 'villus'
 import { GET_ADDRESSES, GET_ADDRESS_DETAIL } from '@/services/graphqlQueries'
 import type { AddressConnection, AddressDetail } from '@/types/address'
 
@@ -25,11 +25,8 @@ export function useAddresses(limit: number = 20, offset: number = 0) {
     return error.value.message || 'Failed to fetch addresses'
   })
 
-  const refetch = async (newLimit?: number, newOffset?: number) => {
-    const variables: { limit?: number; offset?: number } = {}
-    if (newLimit !== undefined) variables.limit = newLimit
-    if (newOffset !== undefined) variables.offset = newOffset
-    await execute({ variables })
+  const refetch = async (newLimit: number = limit, newOffset: number = offset) => {
+    await execute({ variables: { limit: newLimit, offset: newOffset } })
   }
 
   return {
@@ -41,10 +38,14 @@ export function useAddresses(limit: number = 20, offset: number = 0) {
   }
 }
 
-export function useFetchAddressDetail(address: string) {
+export function useFetchAddressDetail(address: Ref<string> | ComputedRef<string>) {
   const { data, isFetching, error, execute } = useQuery<AddressDetailQueryResult>({
     query: GET_ADDRESS_DETAIL,
-    variables: { address }
+    variables: { address: unref(address) }
+  })
+
+  watch(address, (newAddress) => {
+    execute({ variables: { address: newAddress } })
   })
 
   const addressDetail = computed(() => data.value?.addressDetail)
@@ -63,5 +64,35 @@ export function useFetchAddressDetail(address: string) {
     loading,
     error: errorMessage,
     refetch
+  }
+}
+
+export function useFetchAddress() {
+  const client = useClient()
+
+  const fetchAddressByIdentifier = async (address: string): Promise<AddressDetail | null> => {
+    try {
+      const cleanAddress = address.trim().toLowerCase()
+
+      const { data, error } = await client.executeQuery<AddressDetailQueryResult>({
+        query: GET_ADDRESS_DETAIL,
+        variables: { address: cleanAddress },
+        cachePolicy: 'network-only'
+      })
+
+      if (error) {
+        console.error('Error fetching address:', error)
+        return null
+      }
+
+      return data?.addressDetail || null
+    } catch (err) {
+      console.error('Error fetching address:', err)
+      return null
+    }
+  }
+
+  return {
+    fetchAddressByIdentifier
   }
 }

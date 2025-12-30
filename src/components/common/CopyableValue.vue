@@ -9,8 +9,8 @@
     </span>
     <CopyIcon
       v-if="!hideIcon"
+      :value="value"
       :copied="copied"
-      @copy="handleCopy"
     />
   </div>
 </template>

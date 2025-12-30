@@ -288,6 +288,10 @@ const getTxnBarWidth = (count: number) => {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 2px;
   overflow: hidden;
+
+  [data-theme="light"] & {
+    background: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .visual-bar {
@@ -296,6 +300,11 @@ const getTxnBarWidth = (count: number) => {
   border-radius: 2px;
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+
+  [data-theme="light"] & {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.35) 100%);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+  }
 }
 
 .data-split {
@@ -303,6 +312,10 @@ const getTxnBarWidth = (count: number) => {
   gap: $spacing-lg;
   padding-top: $spacing-md;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+  [data-theme="light"] & {
+    border-top-color: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .split-item {
@@ -331,6 +344,10 @@ const getTxnBarWidth = (count: number) => {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   justify-content: flex-end;
+
+  [data-theme="light"] & {
+    border-top-color: rgba(0, 0, 0, 0.05);
+  }
 }
 
 .footer-accent {
@@ -341,6 +358,10 @@ const getTxnBarWidth = (count: number) => {
   width: 0;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+  [data-theme="light"] & {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.08) 100%);
+  }
 }
 
 .footer-code {

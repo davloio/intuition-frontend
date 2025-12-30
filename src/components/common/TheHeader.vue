@@ -1,6 +1,28 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import SearchModal from './SearchModal.vue'
+import ThemeToggle from './ThemeToggle.vue'
+import { useTheme } from '@/composables/useTheme'
+
+const { initTheme } = useTheme()
+const route = useRoute()
+
+const isBlocksActive = computed(() => {
+  return route.path === '/blocks' || route.path.startsWith('/blocks/')
+})
+
+const isTransactionsActive = computed(() => {
+  return route.path === '/transactions' || route.path.startsWith('/transactions/')
+})
+
+const isAddressesActive = computed(() => {
+  return route.path === '/addresses' || route.path.startsWith('/addresses/')
+})
+
+const isHomeActive = computed(() => {
+  return route.path === '/'
+})
 
 const mobileMenuOpen = ref(false)
 const searchModalOpen = ref(false)
@@ -25,6 +47,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 }
 
 onMounted(() => {
+  initTheme()
   window.addEventListener('keydown', handleKeydown)
 })
 
@@ -39,32 +62,36 @@ onUnmounted(() => {
       <div class="header-wrapper">
         <div class="header-content">
           <RouterLink to="/" class="logo">
-            <img src="/logo.svg" alt="Logo" class="logo-icon" />
+            <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
             <span class="logo-text">
               INTUITION <span class="logo-text-tech">EXPLORER</span>
             </span>
           </RouterLink>
 
           <nav class="nav desktop-nav">
-            <RouterLink to="/" class="nav-link" data-text="Home">
+            <RouterLink to="/" class="nav-link" :class="{ 'router-link-active': isHomeActive }" data-text="Home">
               <span class="nav-link-inner border-gradient glass-card">Home</span>
             </RouterLink>
-            <RouterLink to="/blocks" class="nav-link" data-text="Blocks">
+            <RouterLink to="/blocks" class="nav-link" :class="{ 'router-link-active': isBlocksActive }" data-text="Blocks">
               <span class="nav-link-inner border-gradient glass-card">Blocks</span>
             </RouterLink>
-            <RouterLink to="/transactions" class="nav-link" data-text="Transactions">
+            <RouterLink to="/transactions" class="nav-link" :class="{ 'router-link-active': isTransactionsActive }" data-text="Transactions">
               <span class="nav-link-inner border-gradient glass-card">Transactions</span>
             </RouterLink>
-            <RouterLink to="/addresses" class="nav-link" data-text="Addresses">
+            <RouterLink to="/addresses" class="nav-link" :class="{ 'router-link-active': isAddressesActive }" data-text="Addresses">
               <span class="nav-link-inner border-gradient glass-card">Addresses</span>
             </RouterLink>
           </nav>
 
-          <button class="search-button" @click="openSearchModal" aria-label="Search">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
+          <div class="header-actions">
+            <button class="search-button" @click="openSearchModal" aria-label="Search">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <button class="mobile-menu-toggle" @click="toggleMobileMenu" aria-label="Toggle menu" :class="{ 'active': mobileMenuOpen }">
@@ -84,9 +111,8 @@ onUnmounted(() => {
 
     </div>
 
-    <Teleport to="body">
-      <SearchModal v-if="searchModalOpen" @close="closeSearchModal" />
-    </Teleport>
+    <ThemeToggle />
+    <SearchModal v-if="searchModalOpen" @close="closeSearchModal" />
 
     <Teleport to="body">
       <transition name="menu-slide">
@@ -108,22 +134,22 @@ onUnmounted(() => {
           </div>
 
           <nav class="panel-nav">
-            <RouterLink to="/" class="nav-item" @click="toggleMobileMenu">
+            <RouterLink to="/" class="nav-item" :class="{ 'router-link-active': isHomeActive }" @click="toggleMobileMenu">
               <span class="item-num">01</span>
               <span class="item-label">HOME</span>
               <span class="item-bar"></span>
             </RouterLink>
-            <RouterLink to="/blocks" class="nav-item" @click="toggleMobileMenu">
+            <RouterLink to="/blocks" class="nav-item" :class="{ 'router-link-active': isBlocksActive }" @click="toggleMobileMenu">
               <span class="item-num">02</span>
               <span class="item-label">BLOCKS</span>
               <span class="item-bar"></span>
             </RouterLink>
-            <RouterLink to="/transactions" class="nav-item" @click="toggleMobileMenu">
+            <RouterLink to="/transactions" class="nav-item" :class="{ 'router-link-active': isTransactionsActive }" @click="toggleMobileMenu">
               <span class="item-num">03</span>
               <span class="item-label">TRANSACTIONS</span>
               <span class="item-bar"></span>
             </RouterLink>
-            <RouterLink to="/addresses" class="nav-item" @click="toggleMobileMenu">
+            <RouterLink to="/addresses" class="nav-item" :class="{ 'router-link-active': isAddressesActive }" @click="toggleMobileMenu">
               <span class="item-num">04</span>
               <span class="item-label">ADDRESSES</span>
               <span class="item-bar"></span>
@@ -165,7 +191,7 @@ onUnmounted(() => {
   max-width: 1200px;
   margin: 0 auto;
   gap: $spacing-md;
-  background: rgba(255, 255, 255, 0.015);
+  background: var(--header-bg);
   backdrop-filter: blur(40px) saturate(180%) brightness(1.05);
   -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(1.05);
   border: none;
@@ -192,9 +218,9 @@ onUnmounted(() => {
     border-radius: 100px;
     padding: 1px;
     background: linear-gradient(180deg,
-      rgba(255, 255, 255, 0.2) 0%,
-      rgba(255, 255, 255, 0.05) 50%,
-      rgba(255, 255, 255, 0.0) 100%
+      var(--header-border) 0%,
+      rgba(128, 128, 128, 0.05) 50%,
+      rgba(128, 128, 128, 0.0) 100%
     );
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
@@ -209,26 +235,60 @@ onUnmounted(() => {
   gap: $spacing-xs;
   text-decoration: none;
   flex-shrink: 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:hover {
-    opacity: 0.8;
-  }
 }
 
 .logo-icon {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
-  transition: all 0.3s ease;
+  
+  circle {
+    transition: stroke 0.3s ease;
+  }
+  
+  [data-theme="dark"] & circle {
+    stroke: #ffffff;
+  }
+  
+  [data-theme="light"] & circle {
+    stroke: #000000;
+  }
+  
+  .logo:hover & circle {
+    [data-theme="dark"] & {
+      stroke: #cccccc;
+    }
+    
+    [data-theme="light"] & {
+      stroke: #444444;
+    }
+  }
 }
 
 .logo-text {
   font-size: $font-size-base;
   font-weight: 500;
   letter-spacing: 0.02em;
-  color: $color-text-primary;
   white-space: nowrap;
+  transition: color 0.3s ease;
+  
+  [data-theme="dark"] & {
+    color: #ffffff;
+  }
+  
+  [data-theme="light"] & {
+    color: #000000;
+  }
+  
+  .logo:hover & {
+    [data-theme="dark"] & {
+      color: #cccccc;
+    }
+    
+    [data-theme="light"] & {
+      color: #444444;
+    }
+  }
 }
 
 .logo-text-tech {
@@ -259,27 +319,49 @@ onUnmounted(() => {
     white-space: nowrap;
     transition: all 0.3s ease;
     opacity: 0;
-    transform: scale(0.95);
     border: 1px solid transparent;
   }
 
   &:hover .nav-link-inner {
     color: $color-text-primary;
     opacity: 1;
-    transform: scale(1);
-    border-color: rgba(255, 255, 255, 0.15);
+
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.06);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] & {
+      background: rgba(0, 0, 0, 0.4);
+      border-color: $color-border;
+    }
   }
 
   &.router-link-active .nav-link-inner {
     color: $color-text-primary;
     opacity: 1;
-    transform: scale(1);
-    border-color: rgba(255, 255, 255, 0.15);
+
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.06);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] & {
+      background: rgba(0, 0, 0, 0.4);
+      border-color: $color-border;
+    }
   }
 
   &:active .nav-link-inner {
-    border-color: rgba(255, 255, 255, 0.25);
-    transform: scale(0.98);
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+
+    [data-theme="dark"] & {
+      background: rgba(0, 0, 0, 0.5);
+      border-color: $color-border-hover;
+    }
   }
 
   &::before {
@@ -318,40 +400,51 @@ onUnmounted(() => {
   width: 40px;
   height: 40px;
   padding: 0;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(128, 128, 128, 0.05);
+  border: 1px solid $color-border;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
 
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.05);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  [data-theme="light"] & {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.06);
+      border-color: rgba(0, 0, 0, 0.12);
+    }
 
-    &::before {
-      opacity: 1;
+    [data-theme="dark"] & {
+      background: rgba(0, 0, 0, 0.4);
+      border-color: $color-border-hover;
     }
   }
 
   &:active {
-    transform: scale(0.95);
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    [data-theme="dark"] & {
+      background: rgba(0, 0, 0, 0.5);
+    }
   }
 
   &.active {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.25);
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+
+    [data-theme="dark"] & {
+      background: rgba(0, 0, 0, 0.5);
+      border-color: $color-border-hover;
+    }
   }
 
   @include respond-to(lg) {
@@ -662,6 +755,12 @@ onUnmounted(() => {
 
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
 .search-button {
   display: flex;
   align-items: center;
@@ -683,8 +782,15 @@ onUnmounted(() => {
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
     color: $color-text-primary;
+
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.06);
+    }
+
+    [data-theme="dark"] & {
+      background: rgba(0, 0, 0, 0.4);
+    }
   }
 
   @include respond-to(md) {

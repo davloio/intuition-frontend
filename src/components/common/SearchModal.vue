@@ -1,14 +1,31 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useSearch } from '@/composables/useSearch'
 
 const emit = defineEmits<{
   close: []
 }>()
 
-const { search, searching, searchError } = useSearch()
+const { search, searchError, detectQueryType } = useSearch()
 const query = ref('')
 const inputRef = ref<HTMLInputElement | null>(null)
+
+const queryTypePreview = computed(() => {
+  if (!query.value.trim()) return null
+
+  const type = detectQueryType(query.value)
+
+  switch (type) {
+    case 'block_number':
+      return { label: 'Block Number', icon: 'BLK' }
+    case 'transaction_hash':
+      return { label: 'Transaction Hash', icon: 'TXN' }
+    case 'address':
+      return { label: 'Address', icon: 'ADDR' }
+    default:
+      return null
+  }
+})
 
 const handleSearch = async () => {
   if (query.value.trim()) {
@@ -64,26 +81,31 @@ watch(searchError, (error) => {
         ref="inputRef"
         v-model="query"
         type="text"
-        placeholder="Search by block number, hash, or transaction hash..."
+        placeholder="Search by block number, transaction hash, block hash, or address..."
         class="search-input"
         @keydown="handleKeydown"
-        :disabled="searching"
       />
-      <button 
-        class="search-button" 
-        @click="handleSearch" 
-        :disabled="searching || !query.trim()"
+      <button
+        class="search-button"
+        @click="handleSearch"
+        :disabled="!query.trim()"
         aria-label="Search"
       >
-        <svg v-if="!searching" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <div v-else class="loading-spinner"></div>
       </button>
       <button class="close-button" @click="emit('close')" aria-label="Close search">
         <span class="close-icon">×</span>
       </button>
-      
+
+      <transition name="fade">
+        <div v-if="queryTypePreview" class="search-preview">
+          <span class="preview-icon">{{ queryTypePreview.icon }}</span>
+          <span class="preview-label">{{ queryTypePreview.label }}</span>
+        </div>
+      </transition>
+
       <transition name="fade">
         <div v-if="searchError" class="search-error">
           {{ searchError }}
@@ -289,6 +311,33 @@ watch(searchError, (error) => {
   pointer-events: none;
 }
 
+.search-preview {
+  position: absolute;
+  top: calc(100% + $spacing-sm);
+  left: $spacing-lg;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.preview-icon {
+  font-family: $font-family-mono;
+  font-size: 10px;
+  color: $color-text-muted;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.preview-label {
+  font-size: 12px;
+  color: $color-text-secondary;
+  font-weight: 500;
+}
+
 .search-error {
   position: absolute;
   top: calc(100% + $spacing-sm);
@@ -299,6 +348,16 @@ watch(searchError, (error) => {
   background: rgba(239, 68, 68, 0.1);
   padding: $spacing-xs $spacing-md;
   border-radius: 8px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 @keyframes fadeIn {

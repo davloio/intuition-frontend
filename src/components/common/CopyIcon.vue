@@ -1,12 +1,12 @@
 <template>
   <button
     class="copy-icon"
-    :class="{ copied }"
-    @click.stop="$emit('copy')"
-    :aria-label="copied ? 'Copied' : 'Copy to clipboard'"
+    :class="{ copied: isCopied }"
+    @click.stop.prevent="handleCopy"
+    :aria-label="isCopied ? 'Copied' : 'Copy to clipboard'"
   >
     <svg
-      v-if="!copied"
+      v-if="!isCopied"
       width="16"
       height="16"
       viewBox="0 0 24 24"
@@ -36,13 +36,28 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  copied: boolean;
-}>();
+import { ref, computed } from 'vue'
 
-defineEmits<{
-  copy: [];
-}>();
+const props = defineProps<{
+  value: string;
+  copied?: boolean;
+}>()
+
+const localCopied = ref(false)
+
+const isCopied = computed(() => props.copied || localCopied.value)
+
+const handleCopy = async () => {
+  try {
+    await navigator.clipboard.writeText(props.value)
+    localCopied.value = true
+    setTimeout(() => {
+      localCopied.value = false
+    }, 2000)
+  } catch (err) {
+    console.error('Copy failed:', err)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

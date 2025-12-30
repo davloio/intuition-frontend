@@ -1,28 +1,102 @@
-$color-bg-primary: #0a0a0a;
-$color-bg-secondary: #0a0a0a;
-$color-bg-card: rgba(20, 20, 30, 0.5);
-$color-bg-card-hover: rgba(30, 30, 45, 0.7);
+:root {
+  --color-bg-primary: #0a0a0a;
+  --color-bg-secondary: #0a0a0a;
+  --color-bg-card: rgba(20, 20, 30, 0.5);
+  --color-bg-card-hover: rgba(30, 30, 45, 0.7);
 
-$color-gradient-card: linear-gradient(153deg, rgba(34, 34, 34, 0.8) 19.61%, rgba(18, 18, 18, 0.48) 84.06%);
-$color-gradient-border: radial-gradient(farthest-corner at 60% 0%, #dddddd 30%, #858585 55%, transparent 75%, transparent 100%);
-$color-gradient-border-linear: linear-gradient(180deg, #3a3a3a, transparent);
+  --color-gradient-card: linear-gradient(153deg, rgba(34, 34, 34, 0.8) 19.61%, rgba(18, 18, 18, 0.48) 84.06%);
+  --color-gradient-border: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 100%);
+  --color-gradient-border-linear: linear-gradient(180deg, #3a3a3a, transparent);
 
-$color-primary: #ffffff;
-$color-secondary: #e5e5e5;
-$color-accent: #a9a9a9;
+  --color-primary: #ffffff;
+  --color-secondary: #e5e5e5;
+  --color-accent: #a9a9a9;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e5e5e5;
+  --color-text-muted: #a9a9a9;
+  --color-text-dark: #555555;
+
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-hover: rgba(255, 255, 255, 0.2);
+
+  --color-glow: rgba(255, 255, 255, 0.1);
+
+  --color-hover-overlay: rgba(255, 255, 255, 0.06);
+  --color-hover-border: rgba(255, 255, 255, 0.15);
+
+  --header-bg: rgba(255, 255, 255, 0.015);
+  --header-border: rgba(255, 255, 255, 0.2);
+  --grid-opacity: 0.02;
+  --radial-gradient-1: rgba(255, 255, 255, 0.03);
+  --radial-gradient-2: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme="light"] {
+  --color-bg-primary: #e8e8e8;
+  --color-bg-secondary: #f0f0f0;
+  --color-bg-card: rgba(255, 255, 255, 0.7);
+  --color-bg-card-hover: rgba(255, 255, 255, 0.9);
+
+  --color-gradient-card: linear-gradient(153deg, rgba(255, 255, 255, 0.85) 19.61%, rgba(248, 248, 248, 0.6) 84.06%);
+  --color-gradient-border: linear-gradient(135deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.02) 100%);
+  --color-gradient-border-linear: linear-gradient(180deg, #c0c0c0, transparent);
+
+  --color-primary: #0a0a0a;
+  --color-secondary: #1a1a1a;
+  --color-accent: #444444;
+
+  --color-text-primary: #0a0a0a;
+  --color-text-secondary: #2a2a2a;
+  --color-text-muted: #666666;
+  --color-text-dark: #999999;
+
+  --color-border: rgba(0, 0, 0, 0.12);
+  --color-border-hover: rgba(0, 0, 0, 0.25);
+
+  --color-glow: rgba(0, 0, 0, 0.08);
+
+  --color-hover-overlay: rgba(0, 0, 0, 0.05);
+  --color-hover-border: rgba(0, 0, 0, 0.18);
+
+  --header-bg: rgba(255, 255, 255, 0.75);
+  --header-border: rgba(0, 0, 0, 0.15);
+  --grid-opacity: 0.025;
+  --radial-gradient-1: rgba(0, 0, 0, 0.03);
+  --radial-gradient-2: rgba(0, 0, 0, 0.02);
+}
+
+$color-bg-primary: var(--color-bg-primary);
+$color-bg-secondary: var(--color-bg-secondary);
+$color-bg-card: var(--color-bg-card);
+$color-bg-card-hover: var(--color-bg-card-hover);
+
+$color-gradient-card: var(--color-gradient-card);
+$color-gradient-border: var(--color-gradient-border);
+$color-gradient-border-linear: var(--color-gradient-border-linear);
+
+$color-primary: var(--color-primary);
+$color-secondary: var(--color-secondary);
+$color-accent: var(--color-accent);
 $color-success: #10b981;
 $color-warning: #f59e0b;
 $color-error: #ef4444;
 
-$color-text-primary: #ffffff;
-$color-text-secondary: #e5e5e5;
-$color-text-muted: #a9a9a9;
-$color-text-dark: #555555;
+$color-text-primary: var(--color-text-primary);
+$color-text-secondary: var(--color-text-secondary);
+$color-text-muted: var(--color-text-muted);
+$color-text-dark: var(--color-text-dark);
 
-$color-border: rgba(255, 255, 255, 0.1);
-$color-border-hover: rgba(255, 255, 255, 0.2);
+$color-border: var(--color-border);
+$color-border-hover: var(--color-border-hover);
 
-$color-glow: rgba(255, 255, 255, 0.1);
+$color-glow: var(--color-glow);
+
+$color-hover-overlay: var(--color-hover-overlay);
+$color-hover-border: var(--color-hover-border);
 
 $font-family-primary: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
 $font-family-mono: 'Fira Code', 'Monaco', monospace;

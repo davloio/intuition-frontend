@@ -1,24 +1,25 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useFetchBlock } from './useBlocks'
-import { useFetchTransaction } from './useTransactions'
+import { villusClient } from '@/main'
+import { GET_TRANSACTION_DETAIL } from '@/services/graphqlQueries'
 
 export function useSearch() {
   const router = useRouter()
-  const { fetchBlockByIdentifier } = useFetchBlock()
-  const { fetchTransactionByHash } = useFetchTransaction()
-  const searching = ref(false)
   const searchError = ref<string | null>(null)
 
-  const detectQueryType = (query: string): 'block_number' | 'hash' | 'invalid' => {
-    const trimmed = query.trim().replace(/,/g, '')
+  const detectQueryType = (query: string): 'block_number' | 'transaction_hash' | 'address' | 'invalid' => {
+    const trimmed = query.trim().replace(/,/g, '').toLowerCase()
 
     if (/^\d+$/.test(trimmed)) {
       return 'block_number'
     }
 
-    if (/^0x[a-fA-F0-9]{64}$/.test(trimmed)) {
-      return 'hash'
+    if (/^0x[a-f0-9]{64}$/.test(trimmed)) {
+      return 'transaction_hash'
+    }
+
+    if (/^0x[a-f0-9]{40}$/.test(trimmed)) {
+      return 'address'
     }
 
     return 'invalid'
@@ -30,50 +31,40 @@ export function useSearch() {
       return
     }
 
-    searching.value = true
     searchError.value = null
-
     const type = detectQueryType(query)
 
-    try {
-      if (type === 'block_number') {
-        const blockNumber = parseInt(query.trim().replace(/,/g, ''))
-        const block = await fetchBlockByIdentifier(blockNumber)
-        if (block) {
-          router.push(`/blocks/${blockNumber}`)
-        } else {
-          searchError.value = 'Block not found'
-        }
-      } else if (type === 'hash') {
-        const trimmedQuery = query.trim()
-        
-        const tx = await fetchTransactionByHash(trimmedQuery)
-        if (tx) {
-          router.push(`/transactions/${trimmedQuery}`)
-          return
-        }
-        
-        const block = await fetchBlockByIdentifier(trimmedQuery)
-        if (block) {
-          router.push(`/blocks/${trimmedQuery}`)
-          return
-        }
-        
-        searchError.value = 'Hash not found. Please verify the transaction or block hash.'
-      } else {
-        searchError.value = 'Invalid search query. Please enter a block number or a transaction/block hash.'
+    if (type === 'invalid') {
+      searchError.value = 'Invalid search query. Please enter a block number, transaction hash, or address.'
+      return
+    }
+
+    if (type === 'block_number') {
+      const blockNumber = parseInt(query.trim().replace(/,/g, ''))
+      router.push(`/blocks/${blockNumber}`)
+    } else if (type === 'transaction_hash') {
+      const hash = query.trim().toLowerCase()
+      
+      const { data } = await villusClient.executeQuery({
+        query: GET_TRANSACTION_DETAIL,
+        variables: { hash },
+        cachePolicy: 'network-only'
+      })
+
+      if (data?.transactionDetail) {
+        router.push(`/transactions/${hash}`)
+        return
       }
-    } catch (err) {
-      console.error('Search error:', err)
-      searchError.value = 'Search failed. Please try again.'
-    } finally {
-      searching.value = false
+
+      searchError.value = 'Transaction not found. Note: Block hashes cannot be searched - use block numbers instead.'
+    } else if (type === 'address') {
+      const address = query.trim().toLowerCase()
+      router.push(`/addresses/${address}`)
     }
   }
 
   return {
     search,
-    searching,
     searchError,
     detectQueryType
   }

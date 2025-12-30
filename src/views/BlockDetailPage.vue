@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useFetchBlockDetail } from '@/composables/useBlocks'
 import { useTransactions } from '@/composables/useTransactions'
@@ -12,37 +12,11 @@ import CopyIcon from '@/components/common/CopyIcon.vue'
 const route = useRoute()
 const blockNumber = computed(() => parseInt(route.params.identifier as string))
 
-const { blockDetail, loading: blockLoading, error: blockError } = useFetchBlockDetail(blockNumber.value)
-const { transactions, loading: txLoading, error: txError } = useTransactions(100, 0, blockNumber.value)
+const { blockDetail, loading: blockLoading, error: blockError } = useFetchBlockDetail(blockNumber)
+const { transactions, loading: txLoading, error: txError } = useTransactions(100, 0, blockNumber)
 
 const loading = computed(() => blockLoading.value || txLoading.value)
 const error = computed(() => blockError.value || txError.value)
-
-const copiedHash = ref<string | null>(null)
-
-const handleCopyTxHash = async (eventOrHash: Event | string, txHash?: string) => {
-  const hashToCopy = typeof eventOrHash === 'string' ? eventOrHash : txHash!
-  
-  if (eventOrHash instanceof Event) {
-    eventOrHash.preventDefault()
-    eventOrHash.stopPropagation()
-  }
-  
-  try {
-    await navigator.clipboard.writeText(hashToCopy)
-    copiedHash.value = hashToCopy
-    
-    setTimeout(() => {
-      copiedHash.value = null
-    }, 2000)
-  } catch (err) {
-    console.error('Copy failed:', err)
-  }
-}
-
-const isCopied = (txHash: string) => {
-  return copiedHash.value === txHash
-}
 </script>
 
 <template>
@@ -139,7 +113,7 @@ const isCopied = (txHash: string) => {
                 </div>
                 <div class="tx-hash-row">
                   <span class="mono tx-hash-full">{{ tx.hash }}</span>
-                  <CopyIcon :copied="isCopied(tx.hash)" @copy="handleCopyTxHash(tx.hash)" />
+                  <CopyIcon :value="tx.hash" />
                 </div>
                 <div class="tx-meta">
                   <div class="meta-item">
@@ -244,6 +218,10 @@ const isCopied = (txHash: string) => {
   padding-bottom: $spacing-xs;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   margin-bottom: $spacing-xs;
+
+  [data-theme="light"] & {
+    border-bottom-color: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .detail-code {
@@ -261,6 +239,10 @@ const isCopied = (txHash: string) => {
   padding: 6px 0;
   font-size: $font-size-sm;
   border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+
+  [data-theme="light"] & {
+    border-bottom-color: rgba(0, 0, 0, 0.025);
+  }
 
   &:last-child {
     border-bottom: none;
@@ -333,6 +315,10 @@ const isCopied = (txHash: string) => {
   align-items: center;
   padding-bottom: $spacing-xs;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  [data-theme="light"] & {
+    border-bottom-color: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .tx-code {
