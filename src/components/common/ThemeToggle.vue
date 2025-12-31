@@ -52,15 +52,15 @@ const { theme, toggleTheme } = useTheme()
         <circle class="sun-glow" cx="18" cy="18" r="16" fill="url(#sunGlow)" />
         
         <circle class="sun-core" cx="18" cy="18" r="5" fill="currentColor" />
-        
-        <circle class="ray ray-1" cx="18" cy="7.5" r="1.5" fill="currentColor"/>
-        <circle class="ray ray-2" cx="25.9" cy="10.1" r="1.5" fill="currentColor"/>
-        <circle class="ray ray-3" cx="28.5" cy="18" r="1.5" fill="currentColor"/>
-        <circle class="ray ray-4" cx="25.9" cy="25.9" r="1.5" fill="currentColor"/>
-        <circle class="ray ray-5" cx="18" cy="28.5" r="1.5" fill="currentColor"/>
-        <circle class="ray ray-6" cx="10.1" cy="25.9" r="1.5" fill="currentColor"/>
-        <circle class="ray ray-7" cx="7.5" cy="18" r="1.5" fill="currentColor"/>
-        <circle class="ray ray-8" cx="10.1" cy="10.1" r="1.5" fill="currentColor"/>
+
+        <line class="ray ray-1" x1="18" y1="7.5" x2="18" y2="5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line class="ray ray-2" x1="25.4" y1="10.6" x2="26.8" y2="9.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line class="ray ray-3" x1="28.5" y1="18" x2="30.5" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line class="ray ray-4" x1="25.4" y1="25.4" x2="26.8" y2="26.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line class="ray ray-5" x1="18" y1="28.5" x2="18" y2="30.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line class="ray ray-6" x1="10.6" y1="25.4" x2="9.2" y2="26.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line class="ray ray-7" x1="7.5" y1="18" x2="5.5" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line class="ray ray-8" x1="10.6" y1="10.6" x2="9.2" y2="9.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
     </div>
   </button>

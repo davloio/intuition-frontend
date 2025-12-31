@@ -18,9 +18,16 @@ export function useTheme() {
     setTheme(newTheme)
   }
 
+  const getSystemTheme = (): Theme => {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark'
+    }
+    return 'light'
+  }
+
   const initTheme = () => {
     const savedTheme = localStorage.getItem(THEME_KEY) as Theme | null
-    const preferredTheme = savedTheme || 'dark'
+    const preferredTheme = savedTheme || getSystemTheme()
     setTheme(preferredTheme)
   }
 

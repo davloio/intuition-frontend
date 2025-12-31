@@ -63,25 +63,35 @@ const lastSeen = computed(() => {
   display: flex;
   flex-direction: column;
   gap: $spacing-md;
-  border-radius: 12px;
+  border-radius: 8px;
   text-decoration: none;
   color: inherit;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  transition: transform 0.2s ease;
 
-  &::before {
+  &::after {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 12px;
-    background: $color-hover-overlay;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
     opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.2s ease;
     pointer-events: none;
   }
 
-  &:hover::before {
-    opacity: 1;
+  &:hover {
+    transform: translateY(-2px);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  [data-theme="light"] & {
+    &::after {
+      background: rgba(0, 0, 0, 0.03);
+    }
   }
 }
 
