@@ -1,4 +1,4 @@
-FROM node:24-alpine AS builder
+FROM node:25-alpine AS builder
 
 ARG NODE_VERSION=24
 ARG BUILDKIT_INLINE_CACHE=1
@@ -16,7 +16,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:24-alpine
+FROM node:25-alpine
 
 WORKDIR /app
 
