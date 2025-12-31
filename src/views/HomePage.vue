@@ -2,6 +2,7 @@
 import StatsOverview from '@/components/dashboard/StatsOverview.vue'
 import LatestBlocks from '@/components/blocks/LatestBlocks.vue'
 import LatestTransactions from '@/components/transactions/LatestTransactions.vue'
+import UserGrowth from '@/components/dashboard/UserGrowth.vue'
 </script>
 
 <template>
@@ -22,6 +23,12 @@ import LatestTransactions from '@/components/transactions/LatestTransactions.vue
             <LatestTransactions />
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="analytics-section">
+      <div class="container">
+        <UserGrowth />
       </div>
     </section>
   </div>
@@ -72,5 +79,17 @@ import LatestTransactions from '@/components/transactions/LatestTransactions.vue
 
 .content-column {
   animation: slideInUp 0.8s ease;
+}
+
+.analytics-section {
+  padding: 0 0 $spacing-lg 0;
+
+  @include respond-to(md) {
+    padding: 0 0 $spacing-xl 0;
+  }
+
+  @include respond-to(lg) {
+    padding: 0 0 $spacing-2xl 0;
+  }
 }
 </style>

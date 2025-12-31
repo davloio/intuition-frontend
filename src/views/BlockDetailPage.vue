@@ -288,13 +288,28 @@ const error = computed(() => blockError.value || txError.value)
   }
   color: $color-text-primary;
   border-radius: $border-radius-lg;
-  transition: all 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
   display: block;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: $border-radius-lg;
+    background: $color-hover-overlay;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
 
   &:hover {
-    transform: translateY(-2px);
-    background: $color-bg-card-hover;
+    transform: translateY(-4px) scale(1.01);
+
+    &::after {
+      opacity: 1;
+    }
 
     .tx-arrow {
       transform: translateX(4px);

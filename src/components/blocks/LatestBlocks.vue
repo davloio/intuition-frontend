@@ -5,9 +5,11 @@ import { useBlocks, useBlocksSubscription } from '@/composables/useBlocks'
 import { formatNumber } from '@/utils/formatters'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import { format } from 'date-fns'
+import { useBlockchainEvents } from '@/composables/useBlockchainEvents'
 
 const { blocks, loading } = useBlocks(10, 0)
 const { latestBlock } = useBlocksSubscription()
+const { newBlockEvent } = useBlockchainEvents()
 const displayedBlocks = ref(blocks.value)
 const newBlocks = ref<Set<number>>(new Set())
 
@@ -17,19 +19,21 @@ watch(blocks, (currentBlocks) => {
   }
 })
 
-watch(latestBlock, (newBlock) => {
-  if (newBlock && newBlock.number) {
-    const existingIndex = displayedBlocks.value.findIndex(b => b.number === newBlock.number)
-    
-    if (existingIndex === -1) {
-      displayedBlocks.value = [newBlock, ...displayedBlocks.value].slice(0, 10)
-      newBlocks.value.add(newBlock.number)
-      
-      setTimeout(() => {
-        newBlocks.value.delete(newBlock.number)
-      }, 600)
+watch(newBlockEvent, () => {
+  setTimeout(() => {
+    if (latestBlock.value && latestBlock.value.number) {
+      const existingIndex = displayedBlocks.value.findIndex(b => b.number === latestBlock.value!.number)
+
+      if (existingIndex === -1) {
+        displayedBlocks.value = [latestBlock.value, ...displayedBlocks.value].slice(0, 10)
+        newBlocks.value.add(latestBlock.value.number)
+
+        setTimeout(() => {
+          newBlocks.value.delete(latestBlock.value!.number)
+        }, 500)
+      }
     }
-  }
+  }, 300)
 })
 
 const isNewBlock = (blockNumber: number) => {
@@ -61,7 +65,7 @@ const formatBlockTime = (timestamp: number) => {
         :key="block.number"
         :to="`/blocks/${block.number}`"
         class="block-item border-gradient glass-card"
-        :class="{ 'new-item': isNewBlock(block.number), 'animate-in': !isNewBlock(block.number), [`stagger-${index + 1}`]: !isNewBlock(block.number) }"
+        :class="{ 'new-item-enter': isNewBlock(block.number) }"
       >
         <div class="block-info">
           <span class="block-code">BLK</span>
@@ -124,12 +128,27 @@ const formatBlockTime = (timestamp: number) => {
   text-decoration: none;
   color: $color-text-primary;
   border-radius: $border-radius-lg;
-  transition: all 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   height: 88px;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: $border-radius-lg;
+    background: $color-hover-overlay;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
 
   &:hover {
-    transform: translateY(-2px);
-    background: $color-bg-card-hover;
+    transform: translateY(-4px) scale(1.01);
+
+    &::after {
+      opacity: 1;
+    }
   }
 
   @include respond-to(sm) {
@@ -181,11 +200,25 @@ const formatBlockTime = (timestamp: number) => {
   font-weight: 500;
 }
 
-.new-item {
-  animation: slideInFromTop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.new-item-enter {
+  animation: newBlockSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: $border-radius-lg;
+    background: rgba(255, 255, 255, 0.08);
+    animation: highlightFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    pointer-events: none;
+
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.04);
+    }
+  }
 }
 
-@keyframes slideInFromTop {
+@keyframes newBlockSlide {
   from {
     opacity: 0;
     transform: translateY(-20px);
@@ -193,6 +226,15 @@ const formatBlockTime = (timestamp: number) => {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes highlightFade {
+  0%, 60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 </style>

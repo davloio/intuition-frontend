@@ -177,3 +177,15 @@ export const GET_ADDRESS_DETAIL = `
     }
   }
 `
+
+export const GET_USER_GROWTH = `
+  query GetUserGrowth {
+    userGrowth {
+      dataPoints {
+        timestamp
+        totalAddresses
+        blockNumber
+      }
+    }
+  }
+`

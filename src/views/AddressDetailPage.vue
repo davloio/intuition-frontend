@@ -447,11 +447,26 @@ const goToPrevPage = () => {
   display: flex;
   flex-direction: column;
   gap: $spacing-sm;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: $color-hover-overlay;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.06);
+    transform: translateY(-4px) scale(1.01);
+
+    &::after {
+      opacity: 1;
+    }
   }
 }
 

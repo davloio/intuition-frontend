@@ -2,9 +2,11 @@
 import { computed, watch, ref } from 'vue'
 import { useStats, useStatsSubscription } from '@/composables/useStats'
 import { formatNumber } from '@/utils/formatters'
+import { useBlockchainEvents } from '@/composables/useBlockchainEvents'
 
 const { stats: statsData, loading } = useStats()
 const { stats: liveStats } = useStatsSubscription()
+const { triggerNewBlockEvent } = useBlockchainEvents()
 const currentStats = ref(statsData.value)
 const newBlockAnimation = ref(false)
 const displayValue = ref<number>(0)
@@ -65,6 +67,8 @@ watch(liveStats, (newStats) => {
   if (newStats && currentStats.value && newStats.currentBlockHeight > currentStats.value.currentBlockHeight) {
     const oldValue = currentStats.value.currentBlockHeight
     currentStats.value = newStats
+
+    triggerNewBlockEvent()
 
     animateCounter(oldValue, newStats.currentBlockHeight)
     animateFlow()

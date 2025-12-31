@@ -56,4 +56,8 @@ const router = createRouter({
   }
 })
 
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual'
+}
+
 export default router

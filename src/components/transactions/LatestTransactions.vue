@@ -5,9 +5,11 @@ import { useTransactions, useTransactionsSubscription } from '@/composables/useT
 import { truncateHash } from '@/utils/formatters'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import { format } from 'date-fns'
+import { useBlockchainEvents } from '@/composables/useBlockchainEvents'
 
 const { transactions, loading } = useTransactions(10, 0)
 const { latestTransaction } = useTransactionsSubscription()
+const { newBlockEvent } = useBlockchainEvents()
 const displayedTransactions = ref(transactions.value)
 const newTransactions = ref<Set<string>>(new Set())
 
@@ -17,19 +19,21 @@ watch(transactions, (currentTransactions) => {
   }
 })
 
-watch(latestTransaction, (newTx) => {
-  if (newTx && newTx.hash) {
-    const existingIndex = displayedTransactions.value.findIndex(tx => tx.hash === newTx.hash)
-    
-    if (existingIndex === -1) {
-      displayedTransactions.value = [newTx, ...displayedTransactions.value].slice(0, 10)
-      newTransactions.value.add(newTx.hash)
-      
-      setTimeout(() => {
-        newTransactions.value.delete(newTx.hash)
-      }, 600)
+watch(newBlockEvent, () => {
+  setTimeout(() => {
+    if (latestTransaction.value && latestTransaction.value.hash) {
+      const existingIndex = displayedTransactions.value.findIndex(tx => tx.hash === latestTransaction.value!.hash)
+
+      if (existingIndex === -1) {
+        displayedTransactions.value = [latestTransaction.value, ...displayedTransactions.value].slice(0, 10)
+        newTransactions.value.add(latestTransaction.value.hash)
+
+        setTimeout(() => {
+          newTransactions.value.delete(latestTransaction.value!.hash)
+        }, 500)
+      }
     }
-  }
+  }, 350)
 })
 
 const isNewTransaction = (txHash: string) => {
@@ -65,7 +69,7 @@ const getTimestampFromCreatedAt = (createdAt: string): number => {
         :key="tx.hash"
         :to="`/transactions/${tx.hash}`"
         class="transaction-item border-gradient glass-card"
-        :class="{ 'new-item': isNewTransaction(tx.hash), 'animate-in': !isNewTransaction(tx.hash), [`stagger-${index + 1}`]: !isNewTransaction(tx.hash) }"
+        :class="{ 'new-item-enter': isNewTransaction(tx.hash) }"
       >
         <div class="tx-info">
           <span class="tx-code">TXN</span>
@@ -132,15 +136,31 @@ const getTimestampFromCreatedAt = (createdAt: string): number => {
   text-decoration: none;
   color: $color-text-primary;
   border-radius: $border-radius-lg;
-  transition: all 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   height: 88px;
-  @include respond-to(sm) {
-    gap: $spacing-2xl;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: $border-radius-lg;
+    background: $color-hover-overlay;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
   }
 
   &:hover {
-    transform: translateY(-2px);
-    background: $color-bg-card-hover;
+    transform: translateY(-4px) scale(1.01);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  @include respond-to(sm) {
+    gap: $spacing-2xl;
   }
 }
 
@@ -188,11 +208,25 @@ const getTimestampFromCreatedAt = (createdAt: string): number => {
   font-weight: 500;
 }
 
-.new-item {
-  animation: slideInFromTop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.new-item-enter {
+  animation: newTransactionSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: $border-radius-lg;
+    background: rgba(255, 255, 255, 0.08);
+    animation: highlightFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    pointer-events: none;
+
+    [data-theme="light"] & {
+      background: rgba(0, 0, 0, 0.04);
+    }
+  }
 }
 
-@keyframes slideInFromTop {
+@keyframes newTransactionSlide {
   from {
     opacity: 0;
     transform: translateY(-20px);
@@ -200,6 +234,15 @@ const getTimestampFromCreatedAt = (createdAt: string): number => {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes highlightFade {
+  0%, 60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 </style>
