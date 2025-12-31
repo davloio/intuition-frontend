@@ -5,6 +5,9 @@ ARG BUILDKIT_INLINE_CACHE=1
 
 WORKDIR /app
 
+# Update npm to latest version for security patches
+RUN npm install -g npm@latest
+
 COPY package*.json ./
 
 RUN npm ci --prefer-offline --no-audit
@@ -17,7 +20,8 @@ FROM node:24-alpine
 
 WORKDIR /app
 
-RUN npm install -g serve
+# Update npm to latest version for security patches
+RUN npm install -g npm@latest serve
 
 COPY --from=builder /app/dist ./dist
 
