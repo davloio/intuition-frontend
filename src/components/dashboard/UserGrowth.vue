@@ -170,8 +170,7 @@ const formatNumber = (num: number) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/variables.scss';
-@import '@/assets/styles/mixins.scss';
+@use "@/assets/styles/index" as *;
 
 .user-growth {
   padding: $spacing-lg;
