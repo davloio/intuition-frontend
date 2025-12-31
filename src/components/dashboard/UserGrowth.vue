@@ -5,24 +5,48 @@
         <div class="stat-header">
           <span class="stat-code">USR-GROWTH</span>
         </div>
-        <div class="stat-label">Network User Growth</div>
+        <div class="stat-label">
+          Network User Growth
+        </div>
       </div>
-      <div v-if="!loading && dataPoints.length > 0" class="total-users-card">
-        <div class="total-label">TOTAL USERS</div>
-        <div class="total-value mono">{{ formatNumber(dataPoints[dataPoints.length - 1]?.totalAddresses) }}</div>
+      <div
+        v-if="!loading && dataPoints.length > 0"
+        class="total-users-card"
+      >
+        <div class="total-label">
+          TOTAL USERS
+        </div>
+        <div class="total-value mono">
+          {{ formatNumber(dataPoints[dataPoints.length - 1]?.totalAddresses ?? 0) }}
+        </div>
       </div>
     </div>
 
-    <div v-if="loading" class="chart-loading">
-      <div class="loading-spinner"></div>
+    <div
+      v-if="loading"
+      class="chart-loading"
+    >
+      <div class="loading-spinner" />
     </div>
 
-    <div v-else-if="error" class="chart-error">
-      <p class="error-text">{{ error }}</p>
+    <div
+      v-else-if="error"
+      class="chart-error"
+    >
+      <p class="error-text">
+        {{ error }}
+      </p>
     </div>
 
-    <div v-else-if="dataPoints.length > 0" class="chart-container">
-      <svg class="growth-chart" :viewBox="`0 0 ${chartWidth} ${chartHeight}`" preserveAspectRatio="xMidYMid meet">
+    <div
+      v-else-if="dataPoints.length > 0"
+      class="chart-container"
+    >
+      <svg
+        class="growth-chart"
+        :viewBox="`0 0 ${chartWidth} ${chartHeight}`"
+        preserveAspectRatio="xMidYMid meet"
+      >
         <path
           :d="areaPath"
           class="area-path"
@@ -49,10 +73,10 @@
         </g>
 
         <g class="axis-labels">
-          <text 
-            v-for="(point, index) in dataPoints" 
+          <text
+            v-for="(point, index) in dataPoints"
             :key="`label-${index}`"
-            :x="chartPoints[index].x"
+            :x="chartPoints[index]?.x ?? 0"
             :y="chartHeight - padding + 20"
             text-anchor="middle"
             class="axis-label"
@@ -62,23 +86,23 @@
         </g>
       </svg>
 
-      <div 
-        v-if="hoveredPoint !== null" 
+      <div
+        v-if="hoveredPoint !== null && chartPoints[hoveredPoint] && dataPoints[hoveredPoint]"
         class="tooltip"
-        :style="{ left: `${(chartPoints[hoveredPoint].x / chartWidth) * 100}%` }"
+        :style="{ left: `${(chartPoints[hoveredPoint]!.x / chartWidth) * 100}%` }"
       >
         <div class="tooltip-content">
           <div class="tooltip-item">
             <span class="tooltip-label">Block</span>
-            <span class="tooltip-value mono">{{ formatNumber(dataPoints[hoveredPoint].blockNumber) }}</span>
+            <span class="tooltip-value mono">{{ formatNumber(dataPoints[hoveredPoint]!.blockNumber) }}</span>
           </div>
           <div class="tooltip-item">
             <span class="tooltip-label">Addresses</span>
-            <span class="tooltip-value mono">{{ formatNumber(dataPoints[hoveredPoint].totalAddresses) }}</span>
+            <span class="tooltip-value mono">{{ formatNumber(dataPoints[hoveredPoint]!.totalAddresses) }}</span>
           </div>
           <div class="tooltip-item">
             <span class="tooltip-label">Date</span>
-            <span class="tooltip-value">{{ formatFullDate(dataPoints[hoveredPoint].timestamp) }}</span>
+            <span class="tooltip-value">{{ formatFullDate(dataPoints[hoveredPoint]!.timestamp) }}</span>
           </div>
         </div>
       </div>
@@ -118,41 +142,52 @@ const chartPoints = computed(() => {
 
 const linePath = computed(() => {
   if (chartPoints.value.length === 0) return ''
-  
+
   const points = chartPoints.value
-  let path = `M ${points[0].x} ${points[0].y}`
-  
+  const firstPoint = points[0]
+  if (!firstPoint) return ''
+
+  let path = `M ${firstPoint.x} ${firstPoint.y}`
+
   for (let i = 1; i < points.length; i++) {
     const prevPoint = points[i - 1]
     const currentPoint = points[i]
+    if (!prevPoint || !currentPoint) continue
+
     const controlPointX1 = prevPoint.x + (currentPoint.x - prevPoint.x) / 3
     const controlPointX2 = prevPoint.x + (2 * (currentPoint.x - prevPoint.x)) / 3
-    
+
     path += ` C ${controlPointX1} ${prevPoint.y}, ${controlPointX2} ${currentPoint.y}, ${currentPoint.x} ${currentPoint.y}`
   }
-  
+
   return path
 })
 
 const areaPath = computed(() => {
   if (chartPoints.value.length === 0) return ''
-  
+
   const points = chartPoints.value
-  let path = `M ${points[0].x} ${chartHeight - padding}`
-  path += ` L ${points[0].x} ${points[0].y}`
-  
+  const firstPoint = points[0]
+  const lastPoint = points[points.length - 1]
+  if (!firstPoint || !lastPoint) return ''
+
+  let path = `M ${firstPoint.x} ${chartHeight - padding}`
+  path += ` L ${firstPoint.x} ${firstPoint.y}`
+
   for (let i = 1; i < points.length; i++) {
     const prevPoint = points[i - 1]
     const currentPoint = points[i]
+    if (!prevPoint || !currentPoint) continue
+
     const controlPointX1 = prevPoint.x + (currentPoint.x - prevPoint.x) / 3
     const controlPointX2 = prevPoint.x + (2 * (currentPoint.x - prevPoint.x)) / 3
-    
+
     path += ` C ${controlPointX1} ${prevPoint.y}, ${controlPointX2} ${currentPoint.y}, ${currentPoint.x} ${currentPoint.y}`
   }
-  
-  path += ` L ${points[points.length - 1].x} ${chartHeight - padding}`
+
+  path += ` L ${lastPoint.x} ${chartHeight - padding}`
   path += ` Z`
-  
+
   return path
 })
 

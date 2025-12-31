@@ -51,8 +51,12 @@ const getBalanceWidth = (balance?: string) => {
     <div class="container">
       <div class="page-header">
         <div class="header-content">
-          <h1 class="page-title">Addresses</h1>
-          <p class="page-description">All addresses on the Intuition blockchain</p>
+          <h1 class="page-title">
+            Addresses
+          </h1>
+          <p class="page-description">
+            All addresses on the Intuition blockchain
+          </p>
         </div>
 
         <div class="header-stats">
@@ -65,9 +69,15 @@ const getBalanceWidth = (balance?: string) => {
 
       <LoadingSpinner v-if="loading" />
 
-      <ErrorMessage v-else-if="error" :message="error" />
+      <ErrorMessage
+        v-else-if="error"
+        :message="error"
+      />
 
-      <div v-else class="addresses-content">
+      <div
+        v-else
+        class="addresses-content"
+      >
         <div class="address-mosaic">
           <RouterLink
             v-for="(address, index) in addresses"
@@ -76,7 +86,7 @@ const getBalanceWidth = (balance?: string) => {
             class="address-panel border-gradient glass-card animate-in"
             :class="`stagger-${Math.min(index + 1, 10)}`"
           >
-            <div class="panel-glow"></div>
+            <div class="panel-glow" />
 
             <div class="panel-header">
               <div class="header-main">
@@ -86,8 +96,14 @@ const getBalanceWidth = (balance?: string) => {
                 </div>
               </div>
               <div class="header-badge">
-                <span v-if="address.isContract" class="type-pill contract">CONTRACT</span>
-                <span v-else class="type-pill eoa">EOA</span>
+                <span
+                  v-if="address.isContract"
+                  class="type-pill contract"
+                >CONTRACT</span>
+                <span
+                  v-else
+                  class="type-pill eoa"
+                >EOA</span>
               </div>
             </div>
 
@@ -103,7 +119,7 @@ const getBalanceWidth = (balance?: string) => {
                     <div
                       class="balance-fill"
                       :style="{ width: getBalanceWidth(address.balance) + '%' }"
-                    ></div>
+                    />
                   </div>
                 </div>
               </div>
@@ -121,12 +137,15 @@ const getBalanceWidth = (balance?: string) => {
             </div>
 
             <div class="panel-footer">
-              <div class="footer-line"></div>
+              <div class="footer-line" />
             </div>
           </RouterLink>
         </div>
 
-        <div class="pagination" v-if="totalPages > 1">
+        <div
+          v-if="totalPages > 1"
+          class="pagination"
+        >
           <button
             class="pagination-button"
             :disabled="page === 1"

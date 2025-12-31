@@ -70,11 +70,26 @@ watch(searchError, (error) => {
 </script>
 
 <template>
-  <div class="search-modal-backdrop" @click="handleBackdropClick">
+  <div
+    class="search-modal-backdrop"
+    @click="handleBackdropClick"
+  >
     <div class="search-wrapper">
       <div class="search-icon">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
       </div>
       <input
@@ -84,30 +99,52 @@ watch(searchError, (error) => {
         placeholder="Search by block number, transaction hash, block hash, or address..."
         class="search-input"
         @keydown="handleKeydown"
-      />
+      >
       <button
         class="search-button"
-        @click="handleSearch"
         :disabled="!query.trim()"
         aria-label="Search"
+        @click="handleSearch"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M5 12h14M12 5l7 7-7 7"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
       </button>
-      <button class="close-button" @click="emit('close')" aria-label="Close search">
+      <button
+        class="close-button"
+        aria-label="Close search"
+        @click="emit('close')"
+      >
         <span class="close-icon">×</span>
       </button>
 
       <transition name="fade">
-        <div v-if="queryTypePreview" class="search-preview">
+        <div
+          v-if="queryTypePreview"
+          class="search-preview"
+        >
           <span class="preview-icon">{{ queryTypePreview.icon }}</span>
           <span class="preview-label">{{ queryTypePreview.label }}</span>
         </div>
       </transition>
 
       <transition name="fade">
-        <div v-if="searchError" class="search-error">
+        <div
+          v-if="searchError"
+          class="search-error"
+        >
           {{ searchError }}
         </div>
       </transition>

@@ -61,9 +61,26 @@ onUnmounted(() => {
     <div class="container">
       <div class="header-wrapper">
         <div class="header-content">
-          <RouterLink to="/" class="logo">
-            <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2" fill="none"/>
+          <RouterLink
+            to="/"
+            class="logo"
+          >
+            <svg
+              class="logo-icon"
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="16"
+                cy="16"
+                r="14"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+              />
             </svg>
             <span class="logo-text">
               INTUITION <span class="logo-text-tech">EXPLORER</span>
@@ -71,94 +88,206 @@ onUnmounted(() => {
           </RouterLink>
 
           <nav class="nav desktop-nav">
-            <RouterLink to="/" class="nav-link" :class="{ 'router-link-active': isHomeActive }" data-text="Home">
+            <RouterLink
+              to="/"
+              class="nav-link"
+              :class="{ 'router-link-active': isHomeActive }"
+              data-text="Home"
+            >
               <span class="nav-link-inner border-gradient glass-card">Home</span>
             </RouterLink>
-            <RouterLink to="/blocks" class="nav-link" :class="{ 'router-link-active': isBlocksActive }" data-text="Blocks">
+            <RouterLink
+              to="/blocks"
+              class="nav-link"
+              :class="{ 'router-link-active': isBlocksActive }"
+              data-text="Blocks"
+            >
               <span class="nav-link-inner border-gradient glass-card">Blocks</span>
             </RouterLink>
-            <RouterLink to="/transactions" class="nav-link" :class="{ 'router-link-active': isTransactionsActive }" data-text="Transactions">
+            <RouterLink
+              to="/transactions"
+              class="nav-link"
+              :class="{ 'router-link-active': isTransactionsActive }"
+              data-text="Transactions"
+            >
               <span class="nav-link-inner border-gradient glass-card">Transactions</span>
             </RouterLink>
-            <RouterLink to="/addresses" class="nav-link" :class="{ 'router-link-active': isAddressesActive }" data-text="Addresses">
+            <RouterLink
+              to="/addresses"
+              class="nav-link"
+              :class="{ 'router-link-active': isAddressesActive }"
+              data-text="Addresses"
+            >
               <span class="nav-link-inner border-gradient glass-card">Addresses</span>
             </RouterLink>
           </nav>
 
           <div class="header-actions">
-            <button class="search-button" @click="openSearchModal" aria-label="Search">
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <button
+              class="search-button"
+              aria-label="Search"
+              @click="openSearchModal"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             </button>
           </div>
         </div>
 
-        <button class="mobile-menu-toggle" @click="toggleMobileMenu" aria-label="Toggle menu" :class="{ 'active': mobileMenuOpen }">
-          <svg class="toggle-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <g class="icon-grid">
-              <circle cx="5" cy="5" r="1.5" fill="currentColor" />
-              <circle cx="15" cy="5" r="1.5" fill="currentColor" />
-              <circle cx="5" cy="15" r="1.5" fill="currentColor" />
-              <circle cx="15" cy="15" r="1.5" fill="currentColor" />
-            </g>
-            <line class="icon-line line-h" x1="5" y1="10" x2="15" y2="10" stroke="currentColor" stroke-width="2" />
-            <line class="icon-line line-v" x1="10" y1="5" x2="10" y2="15" stroke="currentColor" stroke-width="2" />
-          </svg>
+        <button
+          class="mobile-menu-toggle"
+          aria-label="Toggle menu"
+          :class="{ 'active': mobileMenuOpen }"
+          @click="toggleMobileMenu"
+        >
+          <span class="menu-line" />
+          <span class="menu-line" />
+          <span class="menu-line" />
         </button>
       </div>
-
-
     </div>
 
     <ThemeToggle />
-    <SearchModal v-if="searchModalOpen" @close="closeSearchModal" />
+    <SearchModal
+      v-if="searchModalOpen"
+      @close="closeSearchModal"
+    />
 
     <Teleport to="body">
-      <transition name="menu-slide">
-        <div v-if="mobileMenuOpen" class="mobile-menu-backdrop" @click="toggleMobileMenu"></div>
-      </transition>
-      <transition name="panel-slide">
-        <div v-if="mobileMenuOpen" class="mobile-menu-panel">
-          <div class="panel-grid"></div>
-          <div class="panel-diagonal"></div>
+      <transition name="menu-fade">
+        <div
+          v-if="mobileMenuOpen"
+          class="mobile-menu-backdrop"
+          @click="toggleMobileMenu"
+        >
+          <div
+            class="mobile-menu-wrapper"
+            @click.stop
+          >
+            <button
+              class="menu-close"
+              aria-label="Close menu"
+              @click="toggleMobileMenu"
+            >
+              <span class="close-icon">×</span>
+            </button>
 
-          <button class="panel-close" @click="toggleMobileMenu">
-            <span class="close-line"></span>
-            <span class="close-line"></span>
-          </button>
-
-          <div class="panel-header">
-            <div class="header-code">NAV</div>
-            <div class="header-accent"></div>
-          </div>
-
-          <nav class="panel-nav">
-            <RouterLink to="/" class="nav-item" :class="{ 'router-link-active': isHomeActive }" @click="toggleMobileMenu">
-              <span class="item-num">01</span>
-              <span class="item-label">HOME</span>
-              <span class="item-bar"></span>
-            </RouterLink>
-            <RouterLink to="/blocks" class="nav-item" :class="{ 'router-link-active': isBlocksActive }" @click="toggleMobileMenu">
-              <span class="item-num">02</span>
-              <span class="item-label">BLOCKS</span>
-              <span class="item-bar"></span>
-            </RouterLink>
-            <RouterLink to="/transactions" class="nav-item" :class="{ 'router-link-active': isTransactionsActive }" @click="toggleMobileMenu">
-              <span class="item-num">03</span>
-              <span class="item-label">TRANSACTIONS</span>
-              <span class="item-bar"></span>
-            </RouterLink>
-            <RouterLink to="/addresses" class="nav-item" :class="{ 'router-link-active': isAddressesActive }" @click="toggleMobileMenu">
-              <span class="item-num">04</span>
-              <span class="item-label">ADDRESSES</span>
-              <span class="item-bar"></span>
-            </RouterLink>
-          </nav>
-
-          <div class="panel-footer">
-            <div class="footer-line"></div>
-            <div class="footer-label">INTUITION<br>EXPLORER</div>
+            <nav class="menu-nav">
+              <RouterLink
+                to="/"
+                class="menu-item"
+                :class="{ 'router-link-active': isHomeActive }"
+                @click="toggleMobileMenu"
+              >
+                <span class="item-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </span>
+                <span class="item-text">Home</span>
+              </RouterLink>
+              <RouterLink
+                to="/blocks"
+                class="menu-item"
+                :class="{ 'router-link-active': isBlocksActive }"
+                @click="toggleMobileMenu"
+              >
+                <span class="item-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect
+                      x="3"
+                      y="3"
+                      width="18"
+                      height="18"
+                      rx="2"
+                    />
+                    <path d="M3 9h18M9 21V9" />
+                  </svg>
+                </span>
+                <span class="item-text">Blocks</span>
+              </RouterLink>
+              <RouterLink
+                to="/transactions"
+                class="menu-item"
+                :class="{ 'router-link-active': isTransactionsActive }"
+                @click="toggleMobileMenu"
+              >
+                <span class="item-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  </svg>
+                </span>
+                <span class="item-text">Transactions</span>
+              </RouterLink>
+              <RouterLink
+                to="/addresses"
+                class="menu-item"
+                :class="{ 'router-link-active': isAddressesActive }"
+                @click="toggleMobileMenu"
+              >
+                <span class="item-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle
+                      cx="12"
+                      cy="7"
+                      r="4"
+                    />
+                  </svg>
+                </span>
+                <span class="item-text">Addresses</span>
+              </RouterLink>
+            </nav>
           </div>
         </div>
       </transition>
@@ -395,55 +524,47 @@ onUnmounted(() => {
 
 .mobile-menu-toggle {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 5px;
   width: 40px;
   height: 40px;
   padding: 0;
-  background: rgba(128, 128, 128, 0.05);
-  border: 1px solid $color-border;
-  border-radius: 8px;
+  background: transparent;
+  border: none;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-  overflow: hidden;
-
-  [data-theme="light"] & {
-    background: rgba(0, 0, 0, 0.03);
-    border-color: rgba(0, 0, 0, 0.08);
-  }
 
   &:hover {
-    [data-theme="light"] & {
-      background: rgba(0, 0, 0, 0.06);
-      border-color: rgba(0, 0, 0, 0.12);
-    }
+    .menu-line {
+      &:first-child {
+        width: 20px;
+      }
 
-    [data-theme="dark"] & {
-      background: rgba(0, 0, 0, 0.4);
-      border-color: $color-border-hover;
-    }
-  }
-
-  &:active {
-    [data-theme="light"] & {
-      background: rgba(0, 0, 0, 0.08);
-    }
-
-    [data-theme="dark"] & {
-      background: rgba(0, 0, 0, 0.5);
+      &:last-child {
+        width: 20px;
+      }
     }
   }
 
   &.active {
-    [data-theme="light"] & {
-      background: rgba(0, 0, 0, 0.08);
-      border-color: rgba(0, 0, 0, 0.15);
-    }
+    .menu-line {
+      &:first-child {
+        transform: translateY(7px) rotate(45deg);
+        width: 18px;
+      }
 
-    [data-theme="dark"] & {
-      background: rgba(0, 0, 0, 0.5);
-      border-color: $color-border-hover;
+      &:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+
+      &:last-child {
+        transform: translateY(-7px) rotate(-45deg);
+        width: 18px;
+      }
     }
   }
 
@@ -452,307 +573,203 @@ onUnmounted(() => {
   }
 }
 
-.toggle-icon {
-  color: $color-text-primary;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+.menu-line {
+  width: 18px;
+  height: 2px;
+  background: $color-text-primary;
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
-  .mobile-menu-toggle.active & {
-    transform: rotate(45deg);
-  }
-
-  .icon-grid {
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-
-    .mobile-menu-toggle.active & {
-      opacity: 0;
-      transform: scale(0.5);
-    }
-
-    circle {
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-
-      .mobile-menu-toggle:hover & {
-        r: 2;
-      }
-    }
-  }
-
-  .icon-line {
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    stroke-linecap: round;
-
-    &.line-h {
-      .mobile-menu-toggle.active & {
-        transform: rotate(90deg);
-        transform-origin: center;
-      }
-    }
-
-    &.line-v {
-      .mobile-menu-toggle.active & {
-        opacity: 0;
-        transform: scaleY(0);
-      }
-    }
+  &:first-child,
+  &:last-child {
+    width: 14px;
   }
 }
 
 .mobile-menu-backdrop {
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(8px);
-  z-index: 9998;
-}
-
-.mobile-menu-panel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: min(85vw, 400px);
-  height: 100vh;
-  background: linear-gradient(165deg, #0f0f0f 0%, #050505 100%);
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.panel-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-.panel-diagonal {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 200%;
-  height: 300px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, transparent 60%);
-  transform: skewY(-12deg);
-  transform-origin: top right;
-  pointer-events: none;
-}
-
-.panel-close {
-  position: absolute;
-  top: $spacing-lg;
-  right: $spacing-lg;
-  width: 48px;
-  height: 48px;
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: $spacing-md;
+  z-index: 9999;
+}
+
+.mobile-menu-wrapper {
+  width: 100%;
+  max-width: 340px;
   background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  padding: $spacing-xl;
+
+  [data-theme="light"] & {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.menu-close {
+  position: absolute;
+  top: $spacing-sm;
+  right: $spacing-sm;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  outline: none;
   border-radius: 50%;
+  color: $color-text-muted;
   cursor: pointer;
-  z-index: 10;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
   padding: 0;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.25);
-    transform: rotate(90deg) scale(1.1);
+    color: $color-text-primary;
   }
 
   &:active {
-    transform: rotate(90deg) scale(0.95);
+    transform: scale(0.9);
   }
 }
 
-.close-line {
-  position: absolute;
-  width: 18px;
-  height: 2px;
-  background: $color-text-primary;
-  border-radius: 2px;
-
-  &:first-child {
-    transform: rotate(45deg);
-  }
-
-  &:last-child {
-    transform: rotate(-45deg);
-  }
+.close-icon {
+  font-size: 20px;
+  line-height: 1;
+  display: block;
+  pointer-events: none;
 }
 
-.panel-header {
-  padding: $spacing-2xl $spacing-lg $spacing-lg;
-  position: relative;
-  z-index: 2;
-}
-
-.header-code {
-  font-family: $font-family-mono;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.3em;
-  color: $color-text-muted;
-  margin-bottom: $spacing-sm;
-}
-
-.header-accent {
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(90deg, $color-text-primary 0%, transparent 100%);
-}
-
-.panel-nav {
-  flex: 1;
+.menu-nav {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: $spacing-md;
-  padding: 0 $spacing-lg;
-  position: relative;
-  z-index: 2;
+  gap: 6px;
+  padding-top: $spacing-xs;
 }
 
-.nav-item {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+.menu-item {
+  display: flex;
   align-items: center;
-  gap: $spacing-lg;
-  padding: $spacing-lg 0;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
   text-decoration: none;
   color: $color-text-secondary;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  font-size: $font-size-base;
+  font-weight: 400;
+  border-radius: 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
   position: relative;
 
-  &::before {
-    content: '';
-    position: absolute;
-    left: -$spacing-lg;
-    top: 0;
-    width: 3px;
-    height: 100%;
-    background: $color-text-primary;
-    transform: scaleY(0);
-    transform-origin: bottom;
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  [data-theme="light"] & {
+    color: rgba(0, 0, 0, 0.6);
   }
 
   &:hover {
     color: $color-text-primary;
-    padding-left: $spacing-md;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
 
-    &::before {
-      transform: scaleY(1);
+    [data-theme="light"] & {
+      color: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.08);
     }
+  }
 
-    .item-num {
-      color: $color-text-primary;
-      transform: translateX(4px);
-    }
-
-    .item-label {
-      letter-spacing: 0.15em;
-    }
-
-    .item-bar {
-      transform: scaleX(1);
-    }
+  &:active {
+    transform: scale(0.98);
   }
 
   &.router-link-active {
     color: $color-text-primary;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
 
-    &::before {
-      transform: scaleY(1);
-    }
-
-    .item-num {
-      color: $color-text-primary;
-    }
-
-    .item-bar {
-      transform: scaleX(0.5);
-      opacity: 0.5;
+    [data-theme="light"] & {
+      color: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.06);
+      border-color: rgba(0, 0, 0, 0.1);
     }
   }
 }
 
-.item-num {
-  font-family: $font-family-mono;
-  font-size: $font-size-sm;
-  font-weight: 600;
-  color: $color-text-muted;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+
+  .menu-item:hover &,
+  .menu-item.router-link-active & {
+    opacity: 1;
+  }
+
+  svg {
+    display: block;
+  }
 }
 
-.item-label {
-  font-size: $font-size-xl;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.item-text {
+  flex: 1;
 }
 
-.item-bar {
-  width: 40px;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.3);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+.menu-fade-enter-active,
+.menu-fade-leave-active {
+  transition: opacity 0.2s ease;
 }
 
-.panel-footer {
-  padding: $spacing-lg;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  position: relative;
-  z-index: 2;
-}
-
-.footer-line {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
-  margin-bottom: $spacing-md;
-}
-
-.footer-label {
-  font-family: $font-family-mono;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  color: $color-text-muted;
-  line-height: 1.6;
-}
-
-.menu-slide-enter-active,
-.menu-slide-leave-active {
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.menu-slide-enter-from,
-.menu-slide-leave-to {
+.menu-fade-enter-from,
+.menu-fade-leave-to {
   opacity: 0;
 }
 
-.panel-slide-enter-active,
-.panel-slide-leave-active {
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+.menu-fade-enter-active .mobile-menu-wrapper {
+  animation: menuSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.panel-slide-enter-from,
-.panel-slide-leave-to {
-  transform: translateX(100%);
+.menu-fade-leave-active .mobile-menu-wrapper {
+  animation: menuSlideOut 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.panel-slide-enter-to,
-.panel-slide-leave-from {
-  transform: translateX(0);
+@keyframes menuSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
+@keyframes menuSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
 }
 
 .header-actions {

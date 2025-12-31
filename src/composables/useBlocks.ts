@@ -1,5 +1,6 @@
 import { computed, watch, unref, type Ref, type ComputedRef } from 'vue'
-import { useQuery, useSubscription, useClient } from 'villus'
+import { useQuery, useSubscription } from 'villus'
+import { villusClient } from '@/main'
 import { GET_BLOCKS, GET_BLOCK, GET_BLOCK_DETAIL, SUBSCRIBE_BLOCKS } from '@/services/graphqlQueries'
 import type { Block, BlockDetail, BlockConnection } from '@/types/block'
 
@@ -52,13 +53,11 @@ interface BlockQueryResult {
 }
 
 export function useFetchBlock() {
-  const client = useClient()
-
   const fetchBlockByIdentifier = async (identifier: string | number): Promise<Block | null> => {
     try {
       const identifierStr = typeof identifier === 'number' ? identifier.toString() : identifier.replace(/,/g, '')
 
-      const { data, error } = await client.executeQuery<BlockQueryResult>({
+      const { data, error } = await villusClient.executeQuery<BlockQueryResult>({
         query: GET_BLOCK,
         variables: { identifier: identifierStr },
         cachePolicy: 'network-only'
@@ -103,7 +102,7 @@ export function useFetchBlockDetail(blockNumber: Ref<number> | ComputedRef<numbe
   })
 
   const refetch = async () => {
-    await execute()
+    await execute({ variables: { number: unref(blockNumber) } })
   }
 
   return {

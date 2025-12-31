@@ -48,9 +48,15 @@ const formatTimestamp = (timestamp: string) => {
   <div class="transaction-list">
     <LoadingSpinner v-if="loading && transactions.length === 0" />
 
-    <ErrorMessage v-if="error" :message="error" />
+    <ErrorMessage
+      v-if="error"
+      :message="error"
+    />
 
-    <div v-if="!loading || transactions.length > 0" class="txn-mosaic">
+    <div
+      v-if="!loading || transactions.length > 0"
+      class="txn-mosaic"
+    >
       <RouterLink
         v-for="(tx, index) in transactions"
         :key="tx.hash"
@@ -58,7 +64,7 @@ const formatTimestamp = (timestamp: string) => {
         class="txn-tile border-gradient glass-card animate-in"
         :class="`stagger-${Math.min(index + 1, 10)}`"
       >
-        <div class="tile-glow"></div>
+        <div class="tile-glow" />
 
         <div class="tile-header">
           <span class="txn-label">TXN</span>
@@ -88,28 +94,34 @@ const formatTimestamp = (timestamp: string) => {
         </div>
 
         <div class="tile-footer">
-          <div class="footer-bar"></div>
+          <div class="footer-bar" />
         </div>
       </RouterLink>
     </div>
 
-    <div v-if="transactions.length === 0 && !loading && !error" class="empty-state">
+    <div
+      v-if="transactions.length === 0 && !loading && !error"
+      class="empty-state"
+    >
       <p>No transactions found</p>
     </div>
 
-    <div v-if="totalPages > 1" class="pagination">
+    <div
+      v-if="totalPages > 1"
+      class="pagination"
+    >
       <button
         class="btn-secondary"
-        @click="previousPage"
         :disabled="currentPage === 1 || loading"
+        @click="previousPage"
       >
         Previous
       </button>
       <span class="pagination-info"> Page {{ currentPage }} of {{ totalPages }} </span>
       <button
         class="btn-secondary"
-        @click="nextPage"
         :disabled="currentPage === totalPages || loading"
+        @click="nextPage"
       >
         Next
       </button>

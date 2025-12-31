@@ -5,8 +5,11 @@ defineProps<{
 </script>
 
 <template>
-  <div class="loading-spinner" :class="`spinner-${size || 'medium'}`">
-    <div class="spinner"></div>
+  <div
+    class="loading-spinner"
+    :class="`spinner-${size || 'medium'}`"
+  >
+    <div class="spinner" />
   </div>
 </template>
 

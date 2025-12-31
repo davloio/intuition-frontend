@@ -7,24 +7,57 @@ const { theme, toggleTheme } = useTheme()
 <template>
   <button 
     class="theme-toggle" 
-    @click="toggleTheme" 
-    :aria-label="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+    :aria-label="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'" 
     :class="{ 'is-light': theme === 'light' }"
+    @click="toggleTheme"
   >
     <div class="toggle-wrapper">
-      <svg v-if="theme === 'dark'" class="icon icon-moon" width="36" height="36" viewBox="0 0 36 36">
+      <svg
+        v-if="theme === 'dark'"
+        class="icon icon-moon"
+        width="36"
+        height="36"
+        viewBox="0 0 36 36"
+      >
         <defs>
-          <radialGradient id="moonGlow" cx="50%" cy="50%">
-            <stop offset="0%" stop-color="currentColor" stop-opacity="0.25" />
-            <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+          <radialGradient
+            id="moonGlow"
+            cx="50%"
+            cy="50%"
+          >
+            <stop
+              offset="0%"
+              stop-color="currentColor"
+              stop-opacity="0.25"
+            />
+            <stop
+              offset="100%"
+              stop-color="currentColor"
+              stop-opacity="0"
+            />
           </radialGradient>
           <mask id="moonMask">
-            <rect width="36" height="36" fill="white" />
-            <circle cx="22" cy="18" r="7" fill="black" />
+            <rect
+              width="36"
+              height="36"
+              fill="white"
+            />
+            <circle
+              cx="22"
+              cy="18"
+              r="7"
+              fill="black"
+            />
           </mask>
         </defs>
         
-        <circle class="moon-glow" cx="18" cy="18" r="16" fill="url(#moonGlow)" />
+        <circle
+          class="moon-glow"
+          cx="18"
+          cy="18"
+          r="16"
+          fill="url(#moonGlow)"
+        />
         
         <circle 
           class="moon-crescent" 
@@ -35,32 +68,158 @@ const { theme, toggleTheme } = useTheme()
           mask="url(#moonMask)"
         />
         
-        <circle class="star star-1" cx="10" cy="10" r="1" fill="currentColor" />
-        <circle class="star star-2" cx="28" cy="12" r="1.2" fill="currentColor" />
-        <circle class="star star-3" cx="9" cy="25" r="0.8" fill="currentColor" />
-        <circle class="star star-4" cx="27" cy="26" r="1" fill="currentColor" />
+        <circle
+          class="star star-1"
+          cx="10"
+          cy="10"
+          r="1"
+          fill="currentColor"
+        />
+        <circle
+          class="star star-2"
+          cx="28"
+          cy="12"
+          r="1.2"
+          fill="currentColor"
+        />
+        <circle
+          class="star star-3"
+          cx="9"
+          cy="25"
+          r="0.8"
+          fill="currentColor"
+        />
+        <circle
+          class="star star-4"
+          cx="27"
+          cy="26"
+          r="1"
+          fill="currentColor"
+        />
       </svg>
 
-      <svg v-else class="icon icon-sun" width="36" height="36" viewBox="0 0 36 36">
+      <svg
+        v-else
+        class="icon icon-sun"
+        width="36"
+        height="36"
+        viewBox="0 0 36 36"
+      >
         <defs>
-          <radialGradient id="sunGlow" cx="50%" cy="50%">
-            <stop offset="0%" stop-color="currentColor" stop-opacity="0.3" />
-            <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+          <radialGradient
+            id="sunGlow"
+            cx="50%"
+            cy="50%"
+          >
+            <stop
+              offset="0%"
+              stop-color="currentColor"
+              stop-opacity="0.3"
+            />
+            <stop
+              offset="100%"
+              stop-color="currentColor"
+              stop-opacity="0"
+            />
           </radialGradient>
         </defs>
         
-        <circle class="sun-glow" cx="18" cy="18" r="16" fill="url(#sunGlow)" />
+        <circle
+          class="sun-glow"
+          cx="18"
+          cy="18"
+          r="16"
+          fill="url(#sunGlow)"
+        />
         
-        <circle class="sun-core" cx="18" cy="18" r="5" fill="currentColor" />
+        <circle
+          class="sun-core"
+          cx="18"
+          cy="18"
+          r="5"
+          fill="currentColor"
+        />
 
-        <line class="ray ray-1" x1="18" y1="7.5" x2="18" y2="5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line class="ray ray-2" x1="25.4" y1="10.6" x2="26.8" y2="9.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line class="ray ray-3" x1="28.5" y1="18" x2="30.5" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line class="ray ray-4" x1="25.4" y1="25.4" x2="26.8" y2="26.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line class="ray ray-5" x1="18" y1="28.5" x2="18" y2="30.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line class="ray ray-6" x1="10.6" y1="25.4" x2="9.2" y2="26.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line class="ray ray-7" x1="7.5" y1="18" x2="5.5" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line class="ray ray-8" x1="10.6" y1="10.6" x2="9.2" y2="9.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line
+          class="ray ray-1"
+          x1="18"
+          y1="7.5"
+          x2="18"
+          y2="5.5"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <line
+          class="ray ray-2"
+          x1="25.4"
+          y1="10.6"
+          x2="26.8"
+          y2="9.2"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <line
+          class="ray ray-3"
+          x1="28.5"
+          y1="18"
+          x2="30.5"
+          y2="18"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <line
+          class="ray ray-4"
+          x1="25.4"
+          y1="25.4"
+          x2="26.8"
+          y2="26.8"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <line
+          class="ray ray-5"
+          x1="18"
+          y1="28.5"
+          x2="18"
+          y2="30.5"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <line
+          class="ray ray-6"
+          x1="10.6"
+          y1="25.4"
+          x2="9.2"
+          y2="26.8"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <line
+          class="ray ray-7"
+          x1="7.5"
+          y1="18"
+          x2="5.5"
+          y2="18"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <line
+          class="ray ray-8"
+          x1="10.6"
+          y1="10.6"
+          x2="9.2"
+          y2="9.2"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
       </svg>
     </div>
   </button>
@@ -70,9 +229,9 @@ const { theme, toggleTheme } = useTheme()
 .theme-toggle {
   position: fixed;
   top: $spacing-lg;
-  right: $spacing-lg;
+  left: $spacing-lg;
   z-index: 1000;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   width: 56px;
@@ -84,8 +243,10 @@ const { theme, toggleTheme } = useTheme()
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
   @include respond-to(md) {
+    display: flex;
     top: $spacing-xl;
     right: $spacing-xl;
+    left: auto;
   }
 
   &:hover {

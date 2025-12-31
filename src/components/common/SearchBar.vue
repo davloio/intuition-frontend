@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useSearch } from '@/composables/useSearch'
 
-const { search, searching, searchError } = useSearch()
+const { search, searchError } = useSearch()
 const query = ref('')
 
 const handleSearch = async () => {
@@ -30,15 +30,22 @@ const handleKeyup = (event: KeyboardEvent) => {
         placeholder="Search by block number, transaction hash, block hash, or address..."
         class="search-input"
         @keyup="handleKeyup"
-        :disabled="searching"
-      />
-      <button class="search-button" @click="handleSearch" :disabled="searching || !query.trim()">
-        <span v-if="!searching">🔍</span>
-        <span v-else class="loading-spinner"></span>
+      >
+      <button
+        class="search-button"
+        :disabled="!query.trim()"
+        @click="handleSearch"
+      >
+        <span>🔍</span>
       </button>
     </div>
     <transition name="fade">
-      <p v-if="searchError" class="search-error">{{ searchError }}</p>
+      <p
+        v-if="searchError"
+        class="search-error"
+      >
+        {{ searchError }}
+      </p>
     </transition>
   </div>
 </template>

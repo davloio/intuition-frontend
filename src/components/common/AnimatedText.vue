@@ -26,7 +26,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <span ref="wordElement" class="animated-text">{{ currentWord }}</span>
+  <span
+    ref="wordElement"
+    class="animated-text"
+  >{{ currentWord }}</span>
 </template>
 
 <style lang="scss" scoped>

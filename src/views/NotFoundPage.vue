@@ -6,10 +6,15 @@ import { RouterLink } from 'vue-router'
   <div class="not-found-page">
     <div class="container">
       <div class="not-found-content">
-        <div class="error-code gradient-text">404</div>
+        <div class="error-code gradient-text">
+          404
+        </div>
         <h1>Page Not Found</h1>
         <p>The page you're looking for doesn't exist or has been moved.</p>
-        <RouterLink to="/" class="btn-primary">
+        <RouterLink
+          to="/"
+          class="btn-primary"
+        >
           Go to Homepage
         </RouterLink>
       </div>

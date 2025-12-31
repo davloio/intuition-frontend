@@ -22,20 +22,32 @@ const error = computed(() => blockError.value || txError.value)
 <template>
   <div class="block-detail-page">
     <div class="container">
-      <RouterLink to="/blocks" class="back-link">
+      <RouterLink
+        to="/blocks"
+        class="back-link"
+      >
         ← Back to Blocks
       </RouterLink>
 
       <div class="page-header">
         <h1>Block #{{ formatNumber(blockNumber) }}</h1>
-        <p class="page-description">Block details and transactions</p>
+        <p class="page-description">
+          Block details and transactions
+        </p>
       </div>
 
       <LoadingSpinner v-if="loading" />
 
-      <ErrorMessage v-if="error" :message="error" show-icon />
+      <ErrorMessage
+        v-if="error"
+        :message="error"
+        show-icon
+      />
 
-      <div v-if="!loading && !error && blockDetail" class="block-detail">
+      <div
+        v-if="!loading && !error && blockDetail"
+        class="block-detail"
+      >
         <div class="detail-card border-gradient glass-card">
           <div class="detail-header">
             <span class="detail-code">BLK-INFO</span>
@@ -43,7 +55,12 @@ const error = computed(() => blockError.value || txError.value)
 
           <div class="detail-row">
             <span class="detail-label">Block Number</span>
-            <CopyableValue :value="blockNumber.toString()" :display-value="formatNumber(blockNumber)" value-class="detail-value mono" inline />
+            <CopyableValue
+              :value="blockNumber.toString()"
+              :display-value="formatNumber(blockNumber)"
+              value-class="detail-value mono"
+              inline
+            />
           </div>
 
           <div class="detail-row">
@@ -56,34 +73,62 @@ const error = computed(() => blockError.value || txError.value)
             <span class="detail-value mono">{{ formatNumber(blockDetail.transactionCount) }}</span>
           </div>
 
-          <div v-if="blockDetail.miner" class="detail-row">
+          <div
+            v-if="blockDetail.miner"
+            class="detail-row"
+          >
             <span class="detail-label">Miner</span>
-            <CopyableValue :value="blockDetail.miner" :display-value="truncateHash(blockDetail.miner, 10, 8)" value-class="detail-value mono" inline />
+            <CopyableValue
+              :value="blockDetail.miner"
+              :display-value="truncateHash(blockDetail.miner, 10, 8)"
+              value-class="detail-value mono"
+              inline
+            />
           </div>
 
-          <div v-if="blockDetail.gasUsed && blockDetail.gasLimit" class="detail-row">
+          <div
+            v-if="blockDetail.gasUsed && blockDetail.gasLimit"
+            class="detail-row"
+          >
             <span class="detail-label">Gas Used</span>
             <span class="detail-value mono">{{ formatGasUsage(blockDetail.gasUsed, blockDetail.gasLimit) }}</span>
           </div>
 
-          <div v-if="blockDetail.baseFeePerGas" class="detail-row">
+          <div
+            v-if="blockDetail.baseFeePerGas"
+            class="detail-row"
+          >
             <span class="detail-label">Base Fee</span>
             <span class="detail-value mono">{{ formatNumber(blockDetail.baseFeePerGas) }} wei</span>
           </div>
 
-          <div v-if="blockDetail.size" class="detail-row">
+          <div
+            v-if="blockDetail.size"
+            class="detail-row"
+          >
             <span class="detail-label">Size</span>
             <span class="detail-value mono">{{ formatNumber(blockDetail.size) }} bytes</span>
           </div>
 
-          <div v-if="blockDetail.difficulty" class="detail-row">
+          <div
+            v-if="blockDetail.difficulty"
+            class="detail-row"
+          >
             <span class="detail-label">Difficulty</span>
             <span class="detail-value mono">{{ blockDetail.difficulty }}</span>
           </div>
 
-          <div v-if="blockDetail.parentHash" class="detail-row">
+          <div
+            v-if="blockDetail.parentHash"
+            class="detail-row"
+          >
             <span class="detail-label">Parent Hash</span>
-            <CopyableValue :value="blockDetail.parentHash" :display-value="truncateHash(blockDetail.parentHash, 10, 8)" value-class="detail-value mono" inline />
+            <CopyableValue
+              :value="blockDetail.parentHash"
+              :display-value="truncateHash(blockDetail.parentHash, 10, 8)"
+              value-class="detail-value mono"
+              inline
+            />
           </div>
 
           <div class="detail-row">
@@ -95,11 +140,17 @@ const error = computed(() => blockError.value || txError.value)
         <div class="transactions-section">
           <h2>Transactions in this Block</h2>
 
-          <div v-if="transactions.length === 0" class="empty-state">
+          <div
+            v-if="transactions.length === 0"
+            class="empty-state"
+          >
             <p>No transactions found in this block</p>
           </div>
 
-          <div v-else class="transactions-list">
+          <div
+            v-else
+            class="transactions-list"
+          >
             <RouterLink
               v-for="tx in transactions"
               :key="tx.hash"

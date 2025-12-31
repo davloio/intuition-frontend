@@ -33,10 +33,15 @@ const lastSeen = computed(() => {
   >
     <div class="address-header">
       <span class="address-code">ADDR</span>
-      <span v-if="address.isContract" class="contract-badge">CONTRACT</span>
+      <span
+        v-if="address.isContract"
+        class="contract-badge"
+      >CONTRACT</span>
     </div>
 
-    <div class="address-hash mono">{{ truncated }}</div>
+    <div class="address-hash mono">
+      {{ truncated }}
+    </div>
 
     <div class="address-details">
       <div class="detail-item">

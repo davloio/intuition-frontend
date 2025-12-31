@@ -39,24 +39,39 @@ const formattedFee = computed(() => {
 <template>
   <div class="transaction-detail-page">
     <div class="container">
-      <RouterLink to="/transactions" class="back-link">
+      <RouterLink
+        to="/transactions"
+        class="back-link"
+      >
         ← Back to Transactions
       </RouterLink>
 
       <div class="page-header">
         <h1>Transaction Details</h1>
-        <p class="page-description">Complete transaction information</p>
+        <p class="page-description">
+          Complete transaction information
+        </p>
       </div>
 
       <LoadingSpinner v-if="loading" />
 
-      <ErrorMessage v-else-if="error" :message="error" />
+      <ErrorMessage
+        v-else-if="error"
+        :message="error"
+      />
 
-      <div v-else-if="transactionDetail" class="transaction-details">
+      <div
+        v-else-if="transactionDetail"
+        class="transaction-details"
+      >
         <div class="detail-card border-gradient glass-card">
           <div class="detail-header">
             <span class="detail-code">TXN-INFO</span>
-            <span v-if="statusInfo" class="status-badge" :class="`status-${statusInfo.color}`">
+            <span
+              v-if="statusInfo"
+              class="status-badge"
+              :class="`status-${statusInfo.color}`"
+            >
               {{ statusInfo.text }}
             </span>
           </div>
@@ -71,7 +86,10 @@ const formattedFee = computed(() => {
 
           <div class="detail-row">
             <span class="detail-label">Block Number</span>
-            <RouterLink :to="`/blocks/${transactionDetail.blockNumber}`" class="detail-value mono link-value">
+            <RouterLink
+              :to="`/blocks/${transactionDetail.blockNumber}`"
+              class="detail-value mono link-value"
+            >
               {{ transactionDetail.blockNumber }}
             </RouterLink>
           </div>
@@ -102,8 +120,7 @@ const formattedFee = computed(() => {
               <span class="detail-value mono address-link">
                 {{ transactionDetail.fromAddress }}
               </span>
-              <CopyIcon :value="transactionDetail.fromAddress" 
-              />
+              <CopyIcon :value="transactionDetail.fromAddress" />
             </div>
           </RouterLink>
 
@@ -167,32 +184,50 @@ const formattedFee = computed(() => {
             <span class="detail-code">TXN-GAS</span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.gasUsed !== undefined">
+          <div
+            v-if="transactionDetail.gasUsed !== undefined"
+            class="detail-row"
+          >
             <span class="detail-label">Gas Used</span>
             <span class="detail-value mono">{{ transactionDetail.gasUsed.toLocaleString() }}</span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.gasPrice">
+          <div
+            v-if="transactionDetail.gasPrice"
+            class="detail-row"
+          >
             <span class="detail-label">Gas Price</span>
             <span class="detail-value mono">{{ transactionDetail.gasPrice }}</span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.effectiveGasPrice">
+          <div
+            v-if="transactionDetail.effectiveGasPrice"
+            class="detail-row"
+          >
             <span class="detail-label">Effective Gas Price</span>
             <span class="detail-value mono">{{ transactionDetail.effectiveGasPrice }}</span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.maxFeePerGas">
+          <div
+            v-if="transactionDetail.maxFeePerGas"
+            class="detail-row"
+          >
             <span class="detail-label">Max Fee Per Gas</span>
             <span class="detail-value mono">{{ transactionDetail.maxFeePerGas }}</span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.maxPriorityFeePerGas">
+          <div
+            v-if="transactionDetail.maxPriorityFeePerGas"
+            class="detail-row"
+          >
             <span class="detail-label">Max Priority Fee Per Gas</span>
             <span class="detail-value mono">{{ transactionDetail.maxPriorityFeePerGas }}</span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.cumulativeGasUsed !== undefined">
+          <div
+            v-if="transactionDetail.cumulativeGasUsed !== undefined"
+            class="detail-row"
+          >
             <span class="detail-label">Cumulative Gas Used</span>
             <span class="detail-value mono">{{ transactionDetail.cumulativeGasUsed.toLocaleString() }}</span>
           </div>
@@ -203,34 +238,52 @@ const formattedFee = computed(() => {
             <span class="detail-code">TXN-METADATA</span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.nonce !== undefined">
+          <div
+            v-if="transactionDetail.nonce !== undefined"
+            class="detail-row"
+          >
             <span class="detail-label">Nonce</span>
             <span class="detail-value mono">{{ transactionDetail.nonce }}</span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.transactionType !== undefined">
+          <div
+            v-if="transactionDetail.transactionType !== undefined"
+            class="detail-row"
+          >
             <span class="detail-label">Transaction Type</span>
             <span class="detail-value mono">{{ transactionDetail.transactionType }}</span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.methodId">
+          <div
+            v-if="transactionDetail.methodId"
+            class="detail-row"
+          >
             <span class="detail-label">Method ID</span>
             <span class="detail-value mono">{{ transactionDetail.methodId }}</span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.logsCount !== undefined">
+          <div
+            v-if="transactionDetail.logsCount !== undefined"
+            class="detail-row"
+          >
             <span class="detail-label">Logs Count</span>
             <span class="detail-value mono">{{ transactionDetail.logsCount }}</span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.isBridgeTransaction">
+          <div
+            v-if="transactionDetail.isBridgeTransaction"
+            class="detail-row"
+          >
             <span class="detail-label">Bridge Transaction</span>
             <span class="detail-value">
               <span class="bridge-badge">{{ transactionDetail.bridgeDirection || 'Yes' }}</span>
             </span>
           </div>
 
-          <div class="detail-row" v-if="transactionDetail.inputData">
+          <div
+            v-if="transactionDetail.inputData"
+            class="detail-row"
+          >
             <span class="detail-label">Input Data</span>
             <CopyableValue 
               :value="transactionDetail.inputData" 

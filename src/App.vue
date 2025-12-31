@@ -30,7 +30,6 @@ const animateBackground = () => {
 }
 
 onMounted(() => {
-  window.scrollTo(0, 0)
   window.addEventListener('mousemove', handleMouseMove)
   animateBackground()
 })

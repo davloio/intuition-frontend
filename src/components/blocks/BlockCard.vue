@@ -20,7 +20,10 @@ const formatCreatedAt = (createdAt: string) => {
 </script>
 
 <template>
-  <RouterLink :to="`/blocks/${block.number}`" class="block-card border-gradient glass-card">
+  <RouterLink
+    :to="`/blocks/${block.number}`"
+    class="block-card border-gradient glass-card"
+  >
     <div class="card-header">
       <span class="card-code">BLK</span>
       <span class="card-number">{{ formatNumber(block.number) }}</span>

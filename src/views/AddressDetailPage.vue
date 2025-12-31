@@ -74,41 +74,64 @@ const goToPrevPage = () => {
 <template>
   <div class="address-detail-page">
     <div class="container">
-      <RouterLink to="/addresses" class="back-link">
+      <RouterLink
+        to="/addresses"
+        class="back-link"
+      >
         ← Back to Addresses
       </RouterLink>
 
       <div class="page-header">
         <h1>Address Details</h1>
-        <p class="page-description">Complete address information and transaction history</p>
+        <p class="page-description">
+          Complete address information and transaction history
+        </p>
       </div>
 
       <LoadingSpinner v-if="loading && !addressDetail" />
 
-      <ErrorMessage v-else-if="error" :message="error" />
+      <ErrorMessage
+        v-else-if="error"
+        :message="error"
+      />
 
-      <div v-else-if="addressDetail" class="address-details">
+      <div
+        v-else-if="addressDetail"
+        class="address-details"
+      >
         <div class="detail-card border-gradient glass-card">
           <div class="detail-header">
             <span class="detail-code">ADDR-INFO</span>
-            <span v-if="addressDetail.isContract" class="contract-badge">CONTRACT</span>
+            <span
+              v-if="addressDetail.isContract"
+              class="contract-badge"
+            >CONTRACT</span>
           </div>
 
           <div class="detail-row">
             <span class="detail-label">Address</span>
-            <CopyableValue :value="addressHash" value-class="detail-value mono hash-full" />
+            <CopyableValue
+              :value="addressHash"
+              value-class="detail-value mono hash-full"
+            />
           </div>
 
           <div class="detail-row">
             <span class="detail-label">First Seen Block</span>
-            <RouterLink :to="`/blocks/${addressDetail.firstSeenBlock}`" class="detail-value mono link-value">
+            <RouterLink
+              :to="`/blocks/${addressDetail.firstSeenBlock}`"
+              class="detail-value mono link-value"
+            >
               {{ addressDetail.firstSeenBlock }}
             </RouterLink>
           </div>
 
           <div class="detail-row">
             <span class="detail-label">Last Seen Block</span>
-            <RouterLink :to="`/blocks/${addressDetail.lastSeenBlock}`" class="detail-value mono link-value">
+            <RouterLink
+              :to="`/blocks/${addressDetail.lastSeenBlock}`"
+              class="detail-value mono link-value"
+            >
               {{ addressDetail.lastSeenBlock }}
             </RouterLink>
           </div>
@@ -145,12 +168,18 @@ const goToPrevPage = () => {
             <span class="detail-code">ADDR-ACTIVITY</span>
           </div>
 
-          <div class="detail-row" v-if="addressDetail.transactionCountOut !== undefined">
+          <div
+            v-if="addressDetail.transactionCountOut !== undefined"
+            class="detail-row"
+          >
             <span class="detail-label">Transactions Out</span>
             <span class="detail-value mono">{{ addressDetail.transactionCountOut.toLocaleString() }}</span>
           </div>
 
-          <div class="detail-row" v-if="addressDetail.transactionCountIn !== undefined">
+          <div
+            v-if="addressDetail.transactionCountIn !== undefined"
+            class="detail-row"
+          >
             <span class="detail-label">Transactions In</span>
             <span class="detail-value mono">{{ addressDetail.transactionCountIn.toLocaleString() }}</span>
           </div>
@@ -184,9 +213,15 @@ const goToPrevPage = () => {
 
           <LoadingSpinner v-if="txLoading" />
 
-          <ErrorMessage v-else-if="txError" :message="txError" />
+          <ErrorMessage
+            v-else-if="txError"
+            :message="txError"
+          />
 
-          <div v-else-if="transactions.length > 0" class="transactions-list">
+          <div
+            v-else-if="transactions.length > 0"
+            class="transactions-list"
+          >
             <RouterLink
               v-for="tx in transactions"
               :key="tx.hash"
@@ -198,7 +233,9 @@ const goToPrevPage = () => {
                 <span class="tx-block mono">Block {{ tx.blockNumber }}</span>
               </div>
 
-              <div class="tx-hash mono">{{ truncateHash(tx.hash, 12, 10) }}</div>
+              <div class="tx-hash mono">
+                {{ truncateHash(tx.hash, 12, 10) }}
+              </div>
 
               <div class="tx-details">
                 <div class="tx-detail">
@@ -212,7 +249,10 @@ const goToPrevPage = () => {
               </div>
             </RouterLink>
 
-            <div class="pagination" v-if="totalPages > 1">
+            <div
+              v-if="totalPages > 1"
+              class="pagination"
+            >
               <button
                 class="pagination-button"
                 :disabled="page === 1"
@@ -235,7 +275,10 @@ const goToPrevPage = () => {
             </div>
           </div>
 
-          <div v-else class="empty-state">
+          <div
+            v-else
+            class="empty-state"
+          >
             <p>No transactions found for this address</p>
           </div>
         </div>

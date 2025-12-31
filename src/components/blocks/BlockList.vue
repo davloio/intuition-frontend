@@ -58,9 +58,15 @@ const getTxnBarWidth = (count: number) => {
   <div class="block-list">
     <LoadingSpinner v-if="loading && blocks.length === 0" />
 
-    <ErrorMessage v-if="error" :message="error" />
+    <ErrorMessage
+      v-if="error"
+      :message="error"
+    />
 
-    <div v-if="!loading || blocks.length > 0" class="blocks-mosaic">
+    <div
+      v-if="!loading || blocks.length > 0"
+      class="blocks-mosaic"
+    >
       <RouterLink
         v-for="(block, index) in blocks"
         :key="block.number"
@@ -68,7 +74,7 @@ const getTxnBarWidth = (count: number) => {
         class="block-tile border-gradient glass-card animate-in"
         :class="`stagger-${Math.min(index + 1, 10)}`"
       >
-        <div class="tile-diagonal"></div>
+        <div class="tile-diagonal" />
 
         <div class="tile-header">
           <div class="header-left">
@@ -88,7 +94,10 @@ const getTxnBarWidth = (count: number) => {
               <span class="metric-value mono">{{ block.transactionCount }}</span>
             </div>
             <div class="visual-bar-container">
-              <div class="visual-bar" :style="{ width: getTxnBarWidth(block.transactionCount) + '%' }"></div>
+              <div
+                class="visual-bar"
+                :style="{ width: getTxnBarWidth(block.transactionCount) + '%' }"
+              />
             </div>
           </div>
 
@@ -101,21 +110,27 @@ const getTxnBarWidth = (count: number) => {
         </div>
 
         <div class="tile-footer">
-          <div class="footer-accent"></div>
+          <div class="footer-accent" />
           <span class="footer-code mono">#{{ formatNumber(block.number) }}</span>
         </div>
       </RouterLink>
     </div>
 
-    <div v-if="blocks.length === 0 && !loading && !error" class="empty-state">
+    <div
+      v-if="blocks.length === 0 && !loading && !error"
+      class="empty-state"
+    >
       <p>No blocks found</p>
     </div>
 
-    <div v-if="totalPages > 1" class="pagination">
+    <div
+      v-if="totalPages > 1"
+      class="pagination"
+    >
       <button
         class="btn-secondary"
-        @click="previousPage"
         :disabled="currentPage === 1 || loading"
+        @click="previousPage"
       >
         Previous
       </button>
@@ -124,8 +139,8 @@ const getTxnBarWidth = (count: number) => {
       </span>
       <button
         class="btn-secondary"
-        @click="nextPage"
         :disabled="currentPage === totalPages || loading"
+        @click="nextPage"
       >
         Next
       </button>

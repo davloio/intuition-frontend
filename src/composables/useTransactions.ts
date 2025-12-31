@@ -1,5 +1,6 @@
 import { computed, watch, unref, type Ref, type ComputedRef } from 'vue'
-import { useQuery, useSubscription, useClient } from 'villus'
+import { useQuery, useSubscription } from 'villus'
+import { villusClient } from '@/main'
 import { GET_TRANSACTIONS, GET_TRANSACTION, GET_TRANSACTION_DETAIL, SUBSCRIBE_TRANSACTIONS } from '@/services/graphqlQueries'
 import type { Transaction, TransactionDetail, TransactionConnection } from '@/types/transaction'
 
@@ -41,7 +42,11 @@ export function useTransactions(
 
   if (blockNumber && typeof blockNumber !== 'number') {
     watch(blockNumber, (newBlockNumber) => {
-      const newVariables = { limit, offset, blockNumber: newBlockNumber }
+      const newVariables: { limit: number; offset: number; blockNumber: number; address?: string } = {
+        limit,
+        offset,
+        blockNumber: newBlockNumber
+      }
       const currentAddress = typeof address === 'string' ? address : unref(address)
       if (currentAddress !== undefined) {
         newVariables.address = currentAddress
@@ -52,7 +57,11 @@ export function useTransactions(
 
   if (address && typeof address !== 'string') {
     watch(address, (newAddress) => {
-      const newVariables = { limit, offset, address: newAddress }
+      const newVariables: { limit: number; offset: number; address: string; blockNumber?: number } = {
+        limit,
+        offset,
+        address: newAddress
+      }
       const currentBlockNumber = typeof blockNumber === 'number' ? blockNumber : unref(blockNumber)
       if (currentBlockNumber !== undefined) {
         newVariables.blockNumber = currentBlockNumber
@@ -87,12 +96,12 @@ export function useTransactions(
     if (newBlockNumber !== undefined) {
       newVariables.blockNumber = newBlockNumber
     } else if (blockNumber !== undefined) {
-      newVariables.blockNumber = blockNumber
+      newVariables.blockNumber = typeof blockNumber === 'number' ? blockNumber : unref(blockNumber)
     }
     if (newAddress !== undefined) {
       newVariables.address = newAddress
     } else if (address !== undefined) {
-      newVariables.address = address
+      newVariables.address = typeof address === 'string' ? address : unref(address)
     }
     await execute({ variables: newVariables })
   }
@@ -124,11 +133,9 @@ interface TransactionQueryResult {
 }
 
 export function useFetchTransaction() {
-  const client = useClient()
-
   const fetchTransactionByHash = async (hash: string): Promise<Transaction | null> => {
     try {
-      const { data, error } = await client.executeQuery<TransactionQueryResult>({
+      const { data, error } = await villusClient.executeQuery<TransactionQueryResult>({
         query: GET_TRANSACTION,
         variables: { hash },
         cachePolicy: 'network-only'
@@ -173,7 +180,7 @@ export function useFetchTransactionDetail(hash: Ref<string> | ComputedRef<string
   })
 
   const refetch = async () => {
-    await execute()
+    await execute({ variables: { hash: unref(hash) } })
   }
 
   return {

@@ -58,14 +58,25 @@ const getTimestampFromCreatedAt = (createdAt: string): number => {
   <div class="latest-transactions">
     <div class="section-header">
       <h2>Latest Transactions</h2>
-      <RouterLink to="/transactions" class="view-all-link">View All</RouterLink>
+      <RouterLink
+        to="/transactions"
+        class="view-all-link"
+      >
+        View All
+      </RouterLink>
     </div>
 
-    <LoadingSpinner v-if="loading && displayedTransactions.length === 0" size="small" />
+    <LoadingSpinner
+      v-if="loading && displayedTransactions.length === 0"
+      size="small"
+    />
 
-    <div v-else class="transactions-list">
+    <div
+      v-else
+      class="transactions-list"
+    >
       <RouterLink
-        v-for="(tx, index) in displayedTransactions"
+        v-for="tx in displayedTransactions"
         :key="tx.hash"
         :to="`/transactions/${tx.hash}`"
         class="transaction-item border-gradient glass-card"

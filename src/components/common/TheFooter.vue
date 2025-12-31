@@ -1,87 +1,149 @@
 <script setup lang="ts">
-import { useFooterAnimations } from '@/composables/useFooterAnimations'
-
 const currentYear = new Date().getFullYear()
-const { footerRef, backgroundRef, blobsRef } = useFooterAnimations()
 </script>
 
 <template>
-  <footer ref="footerRef" class="footer">
+  <footer class="footer">
     <div class="container">
-      <div ref="backgroundRef" class="footer-box">
-        <div class="gradient-layer"></div>
-        <div ref="blobsRef" class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
+      <div class="footer-box">
+        <div class="gradient-layer" />
+        <div class="blob blob-1" />
+        <div class="blob blob-2" />
+        <div class="blob blob-3" />
 
         <div class="footer-content">
-      <div class="footer-hero">
-        <h2 class="footer-title">
-          <span class="line">INTUITION</span>
-          <span class="line">EXPLORER</span>
-        </h2>
-        <p class="footer-tagline">Next generation blockchain explorer</p>
-      </div>
+          <div class="footer-hero">
+            <h2 class="footer-title">
+              <span class="line">INTUITION</span>
+              <span class="line">EXPLORER</span>
+            </h2>
+            <p class="footer-tagline">
+              Next generation blockchain explorer
+            </p>
+          </div>
 
-      <div class="footer-columns">
-        <div class="footer-column">
-          <div class="section-code">NAV</div>
-          <h3 class="column-title">Explorer</h3>
-          <nav class="nav-group">
-            <RouterLink to="/" class="nav-link">Home</RouterLink>
-            <RouterLink to="/blocks" class="nav-link">Blocks</RouterLink>
-            <RouterLink to="/transactions" class="nav-link">Transactions</RouterLink>
-            <RouterLink to="/addresses" class="nav-link">Addresses</RouterLink>
-          </nav>
-        </div>
+          <div class="footer-columns">
+            <div class="footer-column">
+              <div class="section-code">
+                NAV
+              </div>
+              <h3 class="column-title">
+                Explorer
+              </h3>
+              <nav class="nav-group">
+                <RouterLink
+                  to="/"
+                  class="nav-link"
+                >
+                  Home
+                </RouterLink>
+                <RouterLink
+                  to="/blocks"
+                  class="nav-link"
+                >
+                  Blocks
+                </RouterLink>
+                <RouterLink
+                  to="/transactions"
+                  class="nav-link"
+                >
+                  Transactions
+                </RouterLink>
+                <RouterLink
+                  to="/addresses"
+                  class="nav-link"
+                >
+                  Addresses
+                </RouterLink>
+              </nav>
+            </div>
 
-        <div class="footer-column">
-          <div class="section-code">EXT</div>
-          <h3 class="column-title">Resources</h3>
-          <nav class="nav-group">
-            <a href="https://intuition.systems" target="_blank" rel="noopener noreferrer" class="nav-link">
-              Intuition Systems
+            <div class="footer-column">
+              <div class="section-code">
+                EXT
+              </div>
+              <h3 class="column-title">
+                Resources
+              </h3>
+              <nav class="nav-group">
+                <a
+                  href="https://intuition.systems"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="nav-link"
+                >
+                  Intuition Systems
+                </a>
+                <a
+                  href="https://docs.intuition.systems"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="nav-link"
+                >
+                  Documentation
+                </a>
+                <a
+                  href="https://github.com/davloio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="nav-link"
+                >
+                  GitHub
+                </a>
+              </nav>
+            </div>
+
+            <div class="footer-column">
+              <div class="section-code">
+                INF
+              </div>
+              <h3 class="column-title">
+                About
+              </h3>
+              <p class="info-text">
+                Next generation blockchain explorer for Intuition Systems.
+                Built with precision and clarity.
+              </p>
+            </div>
+
+            <div class="footer-column">
+              <div class="section-code">
+                CNT
+              </div>
+              <h3 class="column-title">
+                Contact
+              </h3>
+              <p class="info-text">
+                For technical inquiries or explorer-related questions, reach out to our team.
+              </p>
+              <a
+                href="mailto:explorer@davlo.io"
+                class="contact-email"
+              >
+                explorer@davlo.io
+              </a>
+            </div>
+          </div>
+
+          <div class="footer-bottom">
+            <div class="credits-text">
+              © {{ currentYear }} INTUITION EXPLORER
+            </div>
+            <a
+              href="https://davlo.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="credits-link"
+            >
+              <img
+                src="https://avatars.githubusercontent.com/u/240302687?s=32&v=4"
+                alt="davlo.io"
+                class="credits-favicon"
+              >
+              davlo.io
             </a>
-            <a href="https://docs.intuition.systems" target="_blank" rel="noopener noreferrer" class="nav-link">
-              Documentation
-            </a>
-            <a href="https://github.com/davloio" target="_blank" rel="noopener noreferrer" class="nav-link">
-              GitHub
-            </a>
-          </nav>
+          </div>
         </div>
-
-        <div class="footer-column">
-          <div class="section-code">INF</div>
-          <h3 class="column-title">About</h3>
-          <p class="info-text">
-            Next generation blockchain explorer for Intuition Systems.
-            Built with precision and clarity.
-          </p>
-        </div>
-
-        <div class="footer-column">
-          <div class="section-code">CNT</div>
-          <h3 class="column-title">Contact</h3>
-          <p class="info-text">
-            For technical inquiries or explorer-related questions, reach out to our team.
-          </p>
-          <a href="mailto:explorer@davlo.io" class="contact-email">
-            explorer@davlo.io
-          </a>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <div class="credits-text">
-          © {{ currentYear }} INTUITION EXPLORER
-        </div>
-        <a href="https://davlo.io" target="_blank" rel="noopener noreferrer" class="credits-link">
-          <img src="https://avatars.githubusercontent.com/u/240302687?s=32&v=4" alt="davlo.io" class="credits-favicon" />
-          davlo.io
-        </a>
-      </div>
-    </div>
       </div>
     </div>
   </footer>
@@ -91,25 +153,29 @@ const { footerRef, backgroundRef, blobsRef } = useFooterAnimations()
 .footer {
   position: relative;
   margin-top: auto;
-  padding: $spacing-lg 0;
+  padding: 126px 0 0 0;
   background: transparent;
 
+  @include respond-to(md) {
+    padding: 143px 0 0 0;
+  }
+
   @include respond-to(lg) {
-    padding: $spacing-2xl 0;
+    padding: 152px 0 0 0;
   }
 
   .container {
-    padding-bottom: clamp(40px, 6vh, 64px);
+    padding-bottom: 8px;
   }
 }
 
 .footer-box {
   position: relative;
-  padding: clamp(40px, 6vh, 100px) $spacing-lg $spacing-lg;
+  padding: 32px $spacing-md $spacing-md;
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.01);
-  backdrop-filter: blur(40px) saturate(180%) brightness(1.05);
-  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(1.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
               0 1px 2px rgba(255, 255, 255, 0.1),
               inset 0 1px 1px rgba(255, 255, 255, 0.15),
@@ -118,14 +184,13 @@ const { footerRef, backgroundRef, blobsRef } = useFooterAnimations()
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  opacity: 1;
 
   @include respond-to(md) {
-    padding: clamp(50px, 8vh, 120px) $spacing-xl $spacing-lg;
+    padding: 50px $spacing-xl $spacing-lg;
   }
 
   @include respond-to(lg) {
-    padding: clamp(60px, 8vh, 120px) $spacing-2xl $spacing-lg;
+    padding: 60px $spacing-2xl $spacing-lg;
   }
 
   &::before {
@@ -159,7 +224,7 @@ const { footerRef, backgroundRef, blobsRef } = useFooterAnimations()
   );
   background-size: 400% 400%;
   animation: gradientMorph 20s ease infinite;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .blob {
@@ -167,10 +232,9 @@ const { footerRef, backgroundRef, blobsRef } = useFooterAnimations()
   width: 500px;
   height: 500px;
   border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-  opacity: 0;
+  opacity: 0.2;
   filter: blur(80px);
-  will-change: transform;
-  transform: scale(0.8);
+  transform: scale(1);
 
   @include respond-to(lg) {
     width: 700px;
@@ -212,31 +276,40 @@ const { footerRef, backgroundRef, blobsRef } = useFooterAnimations()
 
 .footer-hero {
   text-align: center;
-  margin-bottom: clamp(48px, 8vh, 160px);
+  margin-bottom: 60px;
   perspective: 1000px;
+
+  @include respond-to(md) {
+    margin-bottom: 120px;
+  }
 }
 
 .footer-title {
   font-family: $font-family-primary;
-  font-size: clamp(2.5rem, 10vw, 6rem);
+  font-size: 2rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 0.9;
   color: $color-text-primary;
   margin: 0;
-  transform-style: preserve-3d;
   text-shadow: 0 0 30px rgba(255, 255, 255, 0.3),
                0 0 60px rgba(255, 255, 255, 0.2);
 
+  @include respond-to(md) {
+    font-size: 4rem;
+  }
+
+  @include respond-to(lg) {
+    font-size: 5rem;
+  }
+
   .line {
     display: block;
-    transform-style: preserve-3d;
-    will-change: transform, opacity;
   }
 }
 
 .footer-tagline {
-  font-size: clamp(0.875rem, 2vw, 1.125rem);
+  font-size: 1rem;
   color: $color-text-secondary;
   margin: $spacing-md 0 0;
   max-width: 600px;
@@ -247,26 +320,23 @@ const { footerRef, backgroundRef, blobsRef } = useFooterAnimations()
 .footer-columns {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(32px, 5vh, 80px);
+  gap: 48px;
 
   @include respond-to(md) {
     grid-template-columns: repeat(2, 1fr);
-    gap: clamp(40px, 6vh, 80px) clamp(32px, 4vw, 64px);
+    gap: 64px 48px;
   }
 
   @include respond-to(lg) {
     grid-template-columns: repeat(4, 1fr);
-    gap: clamp(48px, 6vh, 80px);
+    gap: 64px;
   }
 }
 
 .footer-column {
   display: flex;
   flex-direction: column;
-  gap: clamp(16px, 2vh, 32px);
-  opacity: 0;
-  transform: translateY(30px);
-  will-change: transform, opacity;
+  gap: 28px;
 }
 
 .section-code {
@@ -281,11 +351,11 @@ const { footerRef, backgroundRef, blobsRef } = useFooterAnimations()
 
 .column-title {
   font-family: $font-family-primary;
-  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  font-size: 1.125rem;
   font-weight: 600;
   color: $color-text-primary;
   margin: 0;
-  margin-bottom: clamp(12px, 1.5vh, 24px);
+  margin-bottom: 16px;
 }
 
 .footer-bottom {
@@ -293,25 +363,24 @@ const { footerRef, backgroundRef, blobsRef } = useFooterAnimations()
   flex-direction: column;
   gap: $spacing-md;
   margin-top: auto;
-  padding-top: clamp(140px, 20vh, 200px);
-  opacity: 0;
-  transform: translateY(30px);
+  padding-top: 80px;
 
   @include respond-to(md) {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding-top: 180px;
   }
 }
 
 .nav-group {
   display: flex;
   flex-direction: column;
-  gap: clamp(12px, 1.5vh, 20px);
+  gap: 18px;
 }
 
 .nav-link {
-  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-size: 1rem;
   font-weight: 400;
   color: $color-text-secondary;
   text-decoration: none;
@@ -331,11 +400,11 @@ const { footerRef, backgroundRef, blobsRef } = useFooterAnimations()
 }
 
 .info-text {
-  font-size: clamp(0.8rem, 2vw, 0.9rem);
+  font-size: 0.875rem;
   line-height: 1.6;
   color: $color-text-muted;
   margin: 0;
-  margin-bottom: clamp(8px, 1vh, 16px);
+  margin-bottom: 12px;
 }
 
 .contact-group {
@@ -354,7 +423,7 @@ const { footerRef, backgroundRef, blobsRef } = useFooterAnimations()
 
 .contact-email {
   font-family: $font-family-mono;
-  font-size: clamp(0.875rem, 2vw, 1rem);
+  font-size: 0.875rem;
   color: $color-text-primary;
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);

@@ -1,5 +1,8 @@
 <template>
-  <div class="copyable-value" :class="{ inline, clickable: !disableClick }">
+  <div
+    class="copyable-value"
+    :class="{ inline, clickable: !disableClick }"
+  >
     <span
       class="value"
       :class="valueClass"
@@ -30,6 +33,7 @@ const props = withDefaults(
     valueClass?: string;
   }>(),
   {
+    displayValue: undefined,
     inline: false,
     hideIcon: false,
     disableClick: false,

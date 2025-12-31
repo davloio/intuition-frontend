@@ -14,7 +14,7 @@ defineProps<{
       :key="n"
       :class="['skeleton', `skeleton-${type || 'card'}`]"
       :style="{ width: width || '100%', height: height || 'auto' }"
-    ></div>
+    />
   </div>
 </template>
 

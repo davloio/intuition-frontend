@@ -22,9 +22,15 @@ const displayedAddresses = computed(() => addresses.value.slice(0, props.limit |
   <div class="address-list">
     <LoadingSpinner v-if="loading" />
 
-    <ErrorMessage v-else-if="error" :message="error" />
+    <ErrorMessage
+      v-else-if="error"
+      :message="error"
+    />
 
-    <div v-else-if="displayedAddresses.length > 0" class="address-grid">
+    <div
+      v-else-if="displayedAddresses.length > 0"
+      class="address-grid"
+    >
       <AddressCard
         v-for="(address, index) in displayedAddresses"
         :key="address.address"
@@ -33,7 +39,10 @@ const displayedAddresses = computed(() => addresses.value.slice(0, props.limit |
       />
     </div>
 
-    <div v-else class="empty-state">
+    <div
+      v-else
+      class="empty-state"
+    >
       <p>No addresses found</p>
     </div>
   </div>

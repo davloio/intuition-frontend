@@ -34,9 +34,14 @@ onMounted(() => {
           <span class="metric-code">TXN-AVG</span>
           <span class="metric-label">AVERAGE TXS/BLOCK</span>
         </div>
-        <div class="metric-value">{{ avgTransactionsPerBlock }}</div>
+        <div class="metric-value">
+          {{ avgTransactionsPerBlock }}
+        </div>
         <div class="metric-bar">
-          <div class="metric-fill" :style="{ width: '60%' }"></div>
+          <div
+            class="metric-fill"
+            :style="{ width: '60%' }"
+          />
         </div>
         <span class="metric-percentage">60%</span>
       </div>
@@ -46,9 +51,14 @@ onMounted(() => {
           <span class="metric-code">BLK-TIME</span>
           <span class="metric-label">BLOCK TIME</span>
         </div>
-        <div class="metric-value">{{ blockTime }}<span class="metric-unit">s</span></div>
+        <div class="metric-value">
+          {{ blockTime }}<span class="metric-unit">s</span>
+        </div>
         <div class="metric-bar">
-          <div class="metric-fill active" :style="{ width: '100%' }"></div>
+          <div
+            class="metric-fill active"
+            :style="{ width: '100%' }"
+          />
         </div>
         <span class="metric-percentage">OPTIMAL</span>
       </div>

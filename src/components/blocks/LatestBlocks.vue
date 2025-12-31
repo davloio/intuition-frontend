@@ -54,14 +54,25 @@ const formatBlockTime = (timestamp: number) => {
   <div class="latest-blocks">
     <div class="section-header">
       <h2>Latest Blocks</h2>
-      <RouterLink to="/blocks" class="view-all-link">View All</RouterLink>
+      <RouterLink
+        to="/blocks"
+        class="view-all-link"
+      >
+        View All
+      </RouterLink>
     </div>
 
-    <LoadingSpinner v-if="loading && displayedBlocks.length === 0" size="small" />
+    <LoadingSpinner
+      v-if="loading && displayedBlocks.length === 0"
+      size="small"
+    />
 
-    <div v-else class="blocks-list">
+    <div
+      v-else
+      class="blocks-list"
+    >
       <RouterLink
-        v-for="(block, index) in displayedBlocks"
+        v-for="block in displayedBlocks"
         :key="block.number"
         :to="`/blocks/${block.number}`"
         class="block-item border-gradient glass-card"

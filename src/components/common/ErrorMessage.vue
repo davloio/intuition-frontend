@@ -12,10 +12,19 @@ const emit = defineEmits<{
 <template>
   <div class="error-message">
     <div class="error-content">
-      <span v-if="showIcon" class="error-icon">⚠️</span>
-      <p class="error-text">{{ message }}</p>
+      <span
+        v-if="showIcon"
+        class="error-icon"
+      >⚠️</span>
+      <p class="error-text">
+        {{ message }}
+      </p>
     </div>
-    <button class="error-close" @click="emit('close')" aria-label="Close error">
+    <button
+      class="error-close"
+      aria-label="Close error"
+      @click="emit('close')"
+    >
       ×
     </button>
   </div>

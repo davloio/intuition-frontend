@@ -132,7 +132,7 @@ const flowStages = [
 <template>
   <div class="stats-overview">
     <div class="live-indicator">
-      <span class="live-dot"></span>
+      <span class="live-dot" />
       <span class="live-text">LIVE</span>
     </div>
 
@@ -147,11 +147,20 @@ const flowStages = [
           <div class="stat-header">
             <span class="stat-code">{{ stat.code }}</span>
           </div>
-          <div class="stat-label">{{ stat.label }}</div>
-          <div class="stat-value" :class="{ 'hero-value': index === 0 }">
+          <div class="stat-label">
+            {{ stat.label }}
+          </div>
+          <div
+            class="stat-value"
+            :class="{ 'hero-value': index === 0 }"
+          >
             {{ typeof stat.value === 'number' ? formatNumber(index === 0 ? displayValue || stat.value : stat.value) : stat.value }}
           </div>
-          <div v-if="index === 0" class="progress-bar" :class="{ active: newBlockAnimation }"></div>
+          <div
+            v-if="index === 0"
+            class="progress-bar"
+            :class="{ active: newBlockAnimation }"
+          />
         </div>
       </div>
 
@@ -176,8 +185,12 @@ const flowStages = [
 
               <div class="layer-content">
                 <div class="layer-main">
-                  <div class="layer-code">{{ stage.code }}</div>
-                  <div class="layer-title">{{ stage.label }}</div>
+                  <div class="layer-code">
+                    {{ stage.code }}
+                  </div>
+                  <div class="layer-title">
+                    {{ stage.label }}
+                  </div>
                 </div>
                 <div class="layer-meta">
                   <span class="layer-subtitle">{{ stage.sublabel }}</span>
@@ -187,15 +200,32 @@ const flowStages = [
               </div>
 
               <div class="layer-indicator">
-                <div class="indicator-dot"></div>
+                <div class="indicator-dot" />
               </div>
 
-              <div v-if="index < flowStages.length - 1" class="layer-connector">
-                <div class="connector-line"></div>
-                <div class="connector-pulse" :class="{ active: activeStage === index }"></div>
+              <div
+                v-if="index < flowStages.length - 1"
+                class="layer-connector"
+              >
+                <div class="connector-line" />
+                <div
+                  class="connector-pulse"
+                  :class="{ active: activeStage === index }"
+                />
                 <div class="connector-arrow">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M6 1L6 9M6 9L3 6M6 9L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                  >
+                    <path
+                      d="M6 1L6 9M6 9L3 6M6 9L9 6"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </svg>
                 </div>
               </div>

@@ -13,14 +13,20 @@ const displayedAddresses = computed(() => addresses.value)
   <div class="latest-addresses">
     <div class="addresses-header">
       <h2>Latest Addresses</h2>
-      <RouterLink to="/addresses" class="view-all-link">
+      <RouterLink
+        to="/addresses"
+        class="view-all-link"
+      >
         View All
       </RouterLink>
     </div>
 
     <LoadingSpinner v-if="loading" />
 
-    <div v-else class="addresses-container">
+    <div
+      v-else
+      class="addresses-container"
+    >
       <RouterLink
         v-for="address in displayedAddresses"
         :key="address.address"
@@ -30,9 +36,14 @@ const displayedAddresses = computed(() => addresses.value)
         <div class="address-main">
           <div class="address-type">
             <span class="type-code">ADDR</span>
-            <span v-if="address.isContract" class="contract-indicator">CONTRACT</span>
+            <span
+              v-if="address.isContract"
+              class="contract-indicator"
+            >CONTRACT</span>
           </div>
-          <div class="address-hash mono">{{ truncateAddress(address.address, 12, 10) }}</div>
+          <div class="address-hash mono">
+            {{ truncateAddress(address.address, 12, 10) }}
+          </div>
         </div>
 
         <div class="address-info">
