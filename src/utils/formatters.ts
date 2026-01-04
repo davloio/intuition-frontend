@@ -62,8 +62,8 @@ export function formatWei(wei: string | undefined, decimals = 6): string {
 
     if (wei.toLowerCase().includes('e')) {
       const [base, exponent] = wei.toLowerCase().split('e')
-      const baseNum = parseFloat(base)
-      const exp = parseInt(exponent)
+      const baseNum = parseFloat(base!)
+      const exp = parseInt(exponent!)
 
       if (exp >= 0) {
         const multiplier = BigInt(10) ** BigInt(exp)
