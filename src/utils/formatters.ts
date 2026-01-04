@@ -56,12 +56,38 @@ export function weiToEth(wei: string | undefined): string {
 }
 
 export function formatWei(wei: string | undefined, decimals = 6): string {
-  if (!wei) return '0'
+  if (!wei || wei === '0') return '0'
   try {
-    const weiValue = BigInt(wei)
-    const ethValue = Number(weiValue) / 1e18
-    return ethValue.toFixed(decimals)
-  } catch {
+    let weiValue: bigint
+
+    if (wei.toLowerCase().includes('e')) {
+      const [base, exponent] = wei.toLowerCase().split('e')
+      const baseNum = parseFloat(base)
+      const exp = parseInt(exponent)
+
+      if (exp >= 0) {
+        const multiplier = BigInt(10) ** BigInt(exp)
+        const baseInt = Math.floor(baseNum)
+        const baseFrac = baseNum - baseInt
+        weiValue = BigInt(baseInt) * multiplier + BigInt(Math.floor(baseFrac * Number(multiplier)))
+      } else {
+        const divisor = BigInt(10) ** BigInt(-exp)
+        weiValue = BigInt(Math.floor(baseNum)) / divisor
+      }
+    } else {
+      weiValue = BigInt(wei)
+    }
+
+    const divisor = BigInt(10 ** 18)
+    const wholePart = weiValue / divisor
+    const remainder = weiValue % divisor
+
+    const decimalPart = Number(remainder) / Number(divisor)
+    const result = Number(wholePart) + decimalPart
+
+    return result.toFixed(decimals)
+  } catch (error) {
+    console.error('Error formatting wei:', error, wei)
     return '0'
   }
 }

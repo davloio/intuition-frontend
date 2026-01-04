@@ -6,6 +6,7 @@ import { formatWei } from '@/utils/formatters'
 import { format } from 'date-fns'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import ErrorMessage from '@/components/common/ErrorMessage.vue'
+import UserGrowth from '@/components/dashboard/UserGrowth.vue'
 
 const page = ref(1)
 const pageSize = 20
@@ -58,13 +59,10 @@ const getBalanceWidth = (balance?: string) => {
             All addresses on the Intuition blockchain
           </p>
         </div>
+      </div>
 
-        <div class="header-stats">
-          <div class="stat-item">
-            <span class="stat-label">Total Addresses</span>
-            <span class="stat-value mono">{{ totalCount.toLocaleString() }}</span>
-          </div>
-        </div>
+      <div class="user-growth-section">
+        <UserGrowth />
       </div>
 
       <LoadingSpinner v-if="loading" />
@@ -187,16 +185,10 @@ const getBalanceWidth = (balance?: string) => {
 
 .page-header {
   margin-bottom: $spacing-3xl;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: $spacing-xl;
 }
 
 .header-content {
-  flex: 1;
-  min-width: 280px;
+  width: 100%;
 }
 
 .page-title {
@@ -220,28 +212,12 @@ const getBalanceWidth = (balance?: string) => {
   font-size: $font-size-base;
 }
 
-.header-stats {
-  display: flex;
-  gap: $spacing-lg;
-}
+.user-growth-section {
+  margin-bottom: $spacing-2xl;
 
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.stat-label {
-  font-size: 11px;
-  color: $color-text-muted;
-  letter-spacing: 0.05em;
-  font-weight: 500;
-}
-
-.stat-value {
-  font-size: $font-size-xl;
-  color: $color-text-primary;
-  font-weight: 600;
+  @include respond-to(md) {
+    margin-bottom: $spacing-3xl;
+  }
 }
 
 .addresses-content {

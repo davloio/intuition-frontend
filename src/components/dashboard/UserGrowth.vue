@@ -192,7 +192,7 @@ const areaPath = computed(() => {
 })
 
 const formatDate = (timestamp: string) => {
-  return format(new Date(timestamp), 'MMM d')
+  return format(new Date(timestamp), 'MMM d, yy')
 }
 
 const formatFullDate = (timestamp: string) => {

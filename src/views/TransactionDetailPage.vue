@@ -196,32 +196,32 @@ const formattedFee = computed(() => {
             v-if="transactionDetail.gasPrice"
             class="detail-row"
           >
-            <span class="detail-label">Gas Price</span>
-            <span class="detail-value mono">{{ transactionDetail.gasPrice }}</span>
+            <span class="detail-label">Gas Price (Wei)</span>
+            <span class="detail-value mono small-text">{{ transactionDetail.gasPrice }}</span>
           </div>
 
           <div
             v-if="transactionDetail.effectiveGasPrice"
             class="detail-row"
           >
-            <span class="detail-label">Effective Gas Price</span>
-            <span class="detail-value mono">{{ transactionDetail.effectiveGasPrice }}</span>
+            <span class="detail-label">Effective Gas Price (Wei)</span>
+            <span class="detail-value mono small-text">{{ transactionDetail.effectiveGasPrice }}</span>
           </div>
 
           <div
             v-if="transactionDetail.maxFeePerGas"
             class="detail-row"
           >
-            <span class="detail-label">Max Fee Per Gas</span>
-            <span class="detail-value mono">{{ transactionDetail.maxFeePerGas }}</span>
+            <span class="detail-label">Max Fee Per Gas (Wei)</span>
+            <span class="detail-value mono small-text">{{ transactionDetail.maxFeePerGas }}</span>
           </div>
 
           <div
             v-if="transactionDetail.maxPriorityFeePerGas"
             class="detail-row"
           >
-            <span class="detail-label">Max Priority Fee Per Gas</span>
-            <span class="detail-value mono">{{ transactionDetail.maxPriorityFeePerGas }}</span>
+            <span class="detail-label">Max Priority Fee Per Gas (Wei)</span>
+            <span class="detail-value mono small-text">{{ transactionDetail.maxPriorityFeePerGas }}</span>
           </div>
 
           <div

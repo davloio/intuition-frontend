@@ -117,10 +117,10 @@ const currentYear = new Date().getFullYear()
                 For technical inquiries or explorer-related questions, reach out to our team.
               </p>
               <a
-                href="mailto:explorer@davlo.io"
+                href="mailto:intuition@davlo.io"
                 class="contact-email"
               >
-                explorer@davlo.io
+                intuition@davlo.io
               </a>
             </div>
           </div>
