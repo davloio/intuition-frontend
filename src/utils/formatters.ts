@@ -111,6 +111,18 @@ export function formatDateTime(dateTime: string): string {
   return new Date(dateTime).toLocaleString()
 }
 
+export function formatTimeAgo(timestamp: number): string {
+  const now = Math.floor(Date.now() / 1000)
+  const diff = now - timestamp
+  
+  if (diff < 60) {
+    return `${diff}s ago`
+  }
+  
+  const minutes = Math.floor(diff / 60)
+  return `${minutes}m ago`
+}
+
 export function formatGasUsage(used: number, limit: number): string {
   const percentage = ((used / limit) * 100).toFixed(2)
   return `${used.toLocaleString()} / ${limit.toLocaleString()} (${percentage}%)`

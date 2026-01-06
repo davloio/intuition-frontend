@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useBlocks, useBlocksSubscription } from '@/composables/useBlocks'
-import { formatNumber } from '@/utils/formatters'
+import { formatNumber, formatTimeAgo } from '@/utils/formatters'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import { format } from 'date-fns'
 import { useBlockchainEvents } from '@/composables/useBlockchainEvents'
 
 const { blocks, loading } = useBlocks(10, 0)
@@ -12,6 +11,8 @@ const { latestBlock } = useBlocksSubscription()
 const { newBlockEvent } = useBlockchainEvents()
 const displayedBlocks = ref(blocks.value)
 const newBlocks = ref<Set<number>>(new Set())
+const currentTime = ref(Date.now())
+let intervalId: number | null = null
 
 watch(blocks, (currentBlocks) => {
   if (currentBlocks.length > 0 && displayedBlocks.value.length === 0) {
@@ -42,11 +43,20 @@ const isNewBlock = (blockNumber: number) => {
 
 onMounted(() => {
   displayedBlocks.value = blocks.value
+  intervalId = window.setInterval(() => {
+    currentTime.value = Date.now()
+  }, 1000)
+})
+
+onUnmounted(() => {
+  if (intervalId !== null) {
+    clearInterval(intervalId)
+  }
 })
 
 const formatBlockTime = (timestamp: number) => {
-  const date = new Date(timestamp * 1000)
-  return format(date, 'HH:mm:ss')
+  currentTime.value
+  return formatTimeAgo(timestamp)
 }
 </script>
 

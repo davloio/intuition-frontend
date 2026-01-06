@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useTransactions, useTransactionsSubscription } from '@/composables/useTransactions'
-import { truncateHash } from '@/utils/formatters'
+import { truncateHash, formatTimeAgo } from '@/utils/formatters'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import { format } from 'date-fns'
 import { useBlockchainEvents } from '@/composables/useBlockchainEvents'
 
 const { transactions, loading } = useTransactions(10, 0)
@@ -12,6 +11,8 @@ const { latestTransaction } = useTransactionsSubscription()
 const { newBlockEvent } = useBlockchainEvents()
 const displayedTransactions = ref(transactions.value)
 const newTransactions = ref<Set<string>>(new Set())
+const currentTime = ref(Date.now())
+let intervalId: number | null = null
 
 watch(transactions, (currentTransactions) => {
   if (currentTransactions.length > 0 && displayedTransactions.value.length === 0) {
@@ -42,11 +43,20 @@ const isNewTransaction = (txHash: string) => {
 
 onMounted(() => {
   displayedTransactions.value = transactions.value
+  intervalId = window.setInterval(() => {
+    currentTime.value = Date.now()
+  }, 1000)
+})
+
+onUnmounted(() => {
+  if (intervalId !== null) {
+    clearInterval(intervalId)
+  }
 })
 
 const formatTxTime = (timestamp: number) => {
-  const date = new Date(timestamp * 1000)
-  return format(date, 'HH:mm:ss')
+  currentTime.value
+  return formatTimeAgo(timestamp)
 }
 
 const getTimestampFromCreatedAt = (createdAt: string): number => {
