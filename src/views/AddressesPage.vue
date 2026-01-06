@@ -106,7 +106,10 @@ const getBalanceWidth = (balance?: string) => {
             </div>
 
             <div class="panel-body">
-              <div v-if="false" class="data-row balance-row">
+              <div
+                v-if="false"
+                class="data-row balance-row"
+              >
                 <div class="row-label-group">
                   <span class="row-label">BALANCE</span>
                   <span class="row-value mono">{{ formatWei(address.balance) }}</span>

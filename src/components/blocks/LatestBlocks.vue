@@ -55,7 +55,7 @@ onUnmounted(() => {
 })
 
 const formatBlockTime = (timestamp: number) => {
-  currentTime.value
+  void currentTime.value
   return formatTimeAgo(timestamp)
 }
 </script>

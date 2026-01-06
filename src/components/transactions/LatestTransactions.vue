@@ -55,7 +55,7 @@ onUnmounted(() => {
 })
 
 const formatTxTime = (timestamp: number) => {
-  currentTime.value
+  void currentTime.value
   return formatTimeAgo(timestamp)
 }
 
