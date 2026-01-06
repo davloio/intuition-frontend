@@ -119,8 +119,13 @@ export function formatTimeAgo(timestamp: number): string {
     return `${diff}s ago`
   }
   
-  const minutes = Math.floor(diff / 60)
-  return `${minutes}m ago`
+  if (diff < 3600) {
+    const minutes = Math.floor(diff / 60)
+    return `${minutes}m ago`
+  }
+  
+  const hours = Math.floor(diff / 3600)
+  return `${hours}h ago`
 }
 
 export function formatGasUsage(used: number, limit: number): string {
