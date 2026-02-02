@@ -16,25 +16,25 @@
     "ethers": "^6.15.0",
     "graphql": "^16.12.0",
     "graphql-request": "^7.1.2",
-    "graphql-ws": "^6.0.6",
+    "graphql-ws": "^6.0.7",
     "gsap": "^3.13.0",
     "pinia": "^3.0.4",
-    "sass": "^1.94.2",
+    "sass": "^1.97.3",
     "villus": "^3.5.2",
-    "vue": "^3.5.24",
+    "vue": "^3.5.27",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.19.1",
-    "@typescript-eslint/parser": "^8.19.1",
-    "@vitejs/plugin-vue": "^6.0.1",
+    "@types/node": "^25.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "@vitejs/plugin-vue": "^6.0.4",
     "@vue/tsconfig": "^0.8.1",
     "eslint": "^9.18.0",
-    "eslint-plugin-vue": "^10.6.2",
+    "eslint-plugin-vue": "^10.7.0",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.19.1",
-    "vite": "^7.2.4",
-    "vue-tsc": "^3.1.4"
+    "typescript-eslint": "^8.54.0",
+    "vite": "^7.3.1",
+    "vue-tsc": "^3.2.4"
   }
 }
