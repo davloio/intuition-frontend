@@ -34,6 +34,23 @@ const formattedFee = computed(() => {
     eth: formatWei(transactionDetail.value.transactionFee)
   }
 })
+
+const hasAddresses = computed(() => {
+  if (!transactionDetail.value) return false
+  return !!(transactionDetail.value.fromAddress || transactionDetail.value.toAddress || transactionDetail.value.contractAddress)
+})
+
+const hasGasInfo = computed(() => {
+  if (!transactionDetail.value) return false
+  const t = transactionDetail.value
+  return t.gasUsed != null || t.gasPrice || t.effectiveGasPrice || t.maxFeePerGas || t.maxPriorityFeePerGas || t.cumulativeGasUsed != null
+})
+
+const hasMetadata = computed(() => {
+  if (!transactionDetail.value) return false
+  const t = transactionDetail.value
+  return t.nonce != null || t.transactionType != null || t.methodId || t.logsCount != null || t.isBridgeTransaction || t.inputData
+})
 </script>
 
 <template>
@@ -105,7 +122,7 @@ const formattedFee = computed(() => {
           </div>
         </div>
 
-        <div class="detail-card border-gradient glass-card">
+        <div v-if="hasAddresses" class="detail-card border-gradient glass-card">
           <div class="detail-header">
             <span class="detail-code">TXN-ADDRESSES</span>
           </div>
@@ -179,13 +196,13 @@ const formattedFee = computed(() => {
           </div>
         </div>
 
-        <div class="detail-card border-gradient glass-card">
+        <div v-if="hasGasInfo" class="detail-card border-gradient glass-card">
           <div class="detail-header">
             <span class="detail-code">TXN-GAS</span>
           </div>
 
           <div
-            v-if="transactionDetail.gasUsed !== undefined"
+            v-if="transactionDetail.gasUsed != null"
             class="detail-row"
           >
             <span class="detail-label">Gas Used</span>
@@ -225,7 +242,7 @@ const formattedFee = computed(() => {
           </div>
 
           <div
-            v-if="transactionDetail.cumulativeGasUsed !== undefined"
+            v-if="transactionDetail.cumulativeGasUsed != null"
             class="detail-row"
           >
             <span class="detail-label">Cumulative Gas Used</span>
@@ -233,13 +250,13 @@ const formattedFee = computed(() => {
           </div>
         </div>
 
-        <div class="detail-card border-gradient glass-card">
+        <div v-if="hasMetadata" class="detail-card border-gradient glass-card">
           <div class="detail-header">
             <span class="detail-code">TXN-METADATA</span>
           </div>
 
           <div
-            v-if="transactionDetail.nonce !== undefined"
+            v-if="transactionDetail.nonce != null"
             class="detail-row"
           >
             <span class="detail-label">Nonce</span>
@@ -247,7 +264,7 @@ const formattedFee = computed(() => {
           </div>
 
           <div
-            v-if="transactionDetail.transactionType !== undefined"
+            v-if="transactionDetail.transactionType != null"
             class="detail-row"
           >
             <span class="detail-label">Transaction Type</span>
@@ -263,7 +280,7 @@ const formattedFee = computed(() => {
           </div>
 
           <div
-            v-if="transactionDetail.logsCount !== undefined"
+            v-if="transactionDetail.logsCount != null"
             class="detail-row"
           >
             <span class="detail-label">Logs Count</span>
