@@ -1,8 +1,7 @@
 import { computed, watch, unref, type Ref, type ComputedRef } from 'vue'
 import { useQuery, useSubscription } from 'villus'
-import { villusClient } from '@/main'
-import { GET_TRANSACTIONS, GET_TRANSACTION, GET_TRANSACTION_DETAIL, SUBSCRIBE_TRANSACTIONS } from '@/services/graphqlQueries'
-import type { Transaction, TransactionDetail, TransactionConnection } from '@/types/transaction'
+import { GET_TRANSACTIONS, GET_TRANSACTION_DETAIL, SUBSCRIBE_TRANSACTIONS } from '@/services/graphqlQueries'
+import type { TransactionDetail, TransactionConnection } from '@/types/transaction'
 
 interface TransactionsQueryResult {
   transactions: TransactionConnection
@@ -125,36 +124,6 @@ export function useTransactionsSubscription() {
 
   return {
     latestTransaction
-  }
-}
-
-interface TransactionQueryResult {
-  transaction: Transaction | null
-}
-
-export function useFetchTransaction() {
-  const fetchTransactionByHash = async (hash: string): Promise<Transaction | null> => {
-    try {
-      const { data, error } = await villusClient.executeQuery<TransactionQueryResult>({
-        query: GET_TRANSACTION,
-        variables: { hash },
-        cachePolicy: 'network-only'
-      })
-
-      if (error) {
-        console.error('Error fetching transaction:', error)
-        return null
-      }
-
-      return data?.transaction || null
-    } catch (err) {
-      console.error('Error fetching transaction:', err)
-      return null
-    }
-  }
-
-  return {
-    fetchTransactionByHash
   }
 }
 

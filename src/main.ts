@@ -1,50 +1,49 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
 import router from './router'
 import App from './App.vue'
 import '@/assets/styles/main.scss'
-import { createClient, defaultPlugins, handleSubscriptions } from 'villus'
+import { cache, createClient, dedup, defaultPlugins, handleSubscriptions, type ClientPlugin } from 'villus'
 import { createClient as createWSClient } from 'graphql-ws'
+import { mockResolver, mockSubscriptionForwarder } from './services/mockClient'
 
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS === 'true'
 const GRAPHQL_ENDPOINT = import.meta.env.VITE_GRAPHQL_ENDPOINT || 'https://api.intuition.davlo.io/graphql'
 const GRAPHQL_WS_ENDPOINT = import.meta.env.VITE_GRAPHQL_WS_ENDPOINT || 'wss://api.intuition.davlo.io/graphql'
 
-if (!GRAPHQL_ENDPOINT) {
-  console.error('VITE_GRAPHQL_ENDPOINT is not defined!')
-}
+let plugins: ClientPlugin[]
 
-const app = createApp(App)
-const pinia = createPinia()
+if (USE_MOCKS) {
+  // Fully client-side: queries and subscriptions are served by the
+  // deterministic mock chain, no backend required.
+  plugins = [mockSubscriptionForwarder, cache(), dedup(), mockResolver]
+} else {
+  plugins = [...defaultPlugins()]
 
-app.use(pinia)
-app.use(router)
+  if (GRAPHQL_WS_ENDPOINT) {
+    const wsClient = createWSClient({
+      url: GRAPHQL_WS_ENDPOINT
+    })
 
-const plugins = [...defaultPlugins()]
+    const subscriptionsHandler = handleSubscriptions(operation => {
+      return {
+        subscribe: obs => {
+          const dispose = wsClient.subscribe(
+            {
+              query: operation.query,
+              variables: operation.variables
+            },
+            obs
+          )
 
-if (GRAPHQL_WS_ENDPOINT) {
-  const wsClient = createWSClient({
-    url: GRAPHQL_WS_ENDPOINT
-  })
-
-  const subscriptionsHandler = handleSubscriptions(operation => {
-    return {
-      subscribe: obs => {
-        const dispose = wsClient.subscribe(
-          {
-            query: operation.query,
-            variables: operation.variables
-          },
-          obs
-        )
-
-        return {
-          unsubscribe: dispose
+          return {
+            unsubscribe: dispose
+          }
         }
       }
-    }
-  })
+    })
 
-  plugins.unshift(subscriptionsHandler)
+    plugins.unshift(subscriptionsHandler)
+  }
 }
 
 export const villusClient = createClient({
@@ -52,6 +51,9 @@ export const villusClient = createClient({
   use: plugins
 })
 
+const app = createApp(App)
+
+app.use(router)
 app.use(villusClient)
 
 app.mount('#app')

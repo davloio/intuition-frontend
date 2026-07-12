@@ -1,6 +1,5 @@
 import { computed, watch, unref, type Ref, type ComputedRef } from 'vue'
 import { useQuery } from 'villus'
-import { villusClient } from '@/main'
 import { GET_ADDRESSES, GET_ADDRESS_DETAIL } from '@/services/graphqlQueries'
 import type { AddressConnection, AddressDetail } from '@/types/address'
 
@@ -65,33 +64,5 @@ export function useFetchAddressDetail(address: Ref<string> | ComputedRef<string>
     loading,
     error: errorMessage,
     refetch
-  }
-}
-
-export function useFetchAddress() {
-  const fetchAddressByIdentifier = async (address: string): Promise<AddressDetail | null> => {
-    try {
-      const cleanAddress = address.trim().toLowerCase()
-
-      const { data, error } = await villusClient.executeQuery<AddressDetailQueryResult>({
-        query: GET_ADDRESS_DETAIL,
-        variables: { address: cleanAddress },
-        cachePolicy: 'network-only'
-      })
-
-      if (error) {
-        console.error('Error fetching address:', error)
-        return null
-      }
-
-      return data?.addressDetail || null
-    } catch (err) {
-      console.error('Error fetching address:', err)
-      return null
-    }
-  }
-
-  return {
-    fetchAddressByIdentifier
   }
 }

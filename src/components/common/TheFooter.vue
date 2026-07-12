@@ -135,11 +135,6 @@ const currentYear = new Date().getFullYear()
               rel="noopener noreferrer"
               class="credits-link"
             >
-              <img
-                src="https://avatars.githubusercontent.com/u/240302687?s=32&v=4"
-                alt="davlo.io"
-                class="credits-favicon"
-              >
               davlo.io
             </a>
           </div>
@@ -472,17 +467,6 @@ const currentYear = new Date().getFullYear()
 
   &:hover {
     color: $color-text-primary;
-  }
-}
-
-.credits-favicon {
-  width: 14px;
-  height: 14px;
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
-
-  .credits-link:hover & {
-    opacity: 1;
   }
 }
 

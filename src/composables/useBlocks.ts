@@ -1,8 +1,7 @@
 import { computed, watch, unref, type Ref, type ComputedRef } from 'vue'
 import { useQuery, useSubscription } from 'villus'
-import { villusClient } from '@/main'
-import { GET_BLOCKS, GET_BLOCK, GET_BLOCK_DETAIL, SUBSCRIBE_BLOCKS } from '@/services/graphqlQueries'
-import type { Block, BlockDetail, BlockConnection } from '@/types/block'
+import { GET_BLOCKS, GET_BLOCK_DETAIL, SUBSCRIBE_BLOCKS } from '@/services/graphqlQueries'
+import type { BlockDetail, BlockConnection } from '@/types/block'
 
 interface BlocksQueryResult {
   blocks: BlockConnection
@@ -45,38 +44,6 @@ export function useBlocksSubscription() {
 
   return {
     latestBlock
-  }
-}
-
-interface BlockQueryResult {
-  block: Block | null
-}
-
-export function useFetchBlock() {
-  const fetchBlockByIdentifier = async (identifier: string | number): Promise<Block | null> => {
-    try {
-      const identifierStr = typeof identifier === 'number' ? identifier.toString() : identifier.replace(/,/g, '')
-
-      const { data, error } = await villusClient.executeQuery<BlockQueryResult>({
-        query: GET_BLOCK,
-        variables: { identifier: identifierStr },
-        cachePolicy: 'network-only'
-      })
-
-      if (error) {
-        console.error('Error fetching block:', error)
-        return null
-      }
-
-      return data?.block || null
-    } catch (err) {
-      console.error('Error fetching block:', err)
-      return null
-    }
-  }
-
-  return {
-    fetchBlockByIdentifier
   }
 }
 

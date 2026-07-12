@@ -68,28 +68,6 @@ export const SUBSCRIBE_TRANSACTIONS = `
   }
 `
 
-export const GET_BLOCK = `
-  query GetBlock($identifier: String!) {
-    block(identifier: $identifier) {
-      number
-      timestamp
-      transactionCount
-      createdAt
-    }
-  }
-`
-
-export const GET_TRANSACTION = `
-  query GetTransaction($hash: String!) {
-    transaction(hash: $hash) {
-      hash
-      blockNumber
-      position
-      createdAt
-    }
-  }
-`
-
 export const GET_BLOCK_DETAIL = `
   query GetBlockDetail($number: Int!) {
     blockDetail(number: $number) {
